@@ -86,7 +86,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DriveHandler.h" />
+    <ClInclude Include="ProximitySensorHandler.h" />
     <ClInclude Include="__vm\.SandwichBoxBot.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DriveHandler.cpp" />
+    <ClCompile Include="ProximitySensorHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
