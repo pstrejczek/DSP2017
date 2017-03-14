@@ -2,6 +2,7 @@
 
 DriveHandlerClass::DriveHandlerClass()
 {
+	direction = FORWARD;
 	pinMode(DRIVE_AIA, OUTPUT);
 	pinMode(DRIVE_AIB, OUTPUT);
 	pinMode(DRIVE_BIA, OUTPUT);
@@ -16,9 +17,9 @@ void DriveHandlerClass::stopDrive()
 	analogWrite(DRIVE_BIB, 0);
 }
 
-void DriveHandlerClass::startDrive(DriveDirection dState)
+void DriveHandlerClass::startDrive()
 {
-	switch (dState)
+	switch (direction)
 	{
 	case FORWARD:
 		analogWrite(DRIVE_AIA, 1023);
@@ -35,6 +36,12 @@ void DriveHandlerClass::startDrive(DriveDirection dState)
 	default:
 		break;
 	}
+}
+
+void DriveHandlerClass::reverseDirection()
+{
+	if (direction == FORWARD) direction = BACKWARD;
+	else direction = FORWARD;
 }
 
 

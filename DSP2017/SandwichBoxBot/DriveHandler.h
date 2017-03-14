@@ -21,13 +21,16 @@ typedef enum DriveDirection {
 
 class DriveHandlerClass
 {
+ private:
+	DriveDirection direction;
  protected:
 
 
  public:
 	 DriveHandlerClass();
 	void stopDrive();
-	void startDrive(DriveDirection dState);
+	void startDrive();
+	void reverseDirection();
 };
 
 extern DriveHandlerClass DriveHandler;
