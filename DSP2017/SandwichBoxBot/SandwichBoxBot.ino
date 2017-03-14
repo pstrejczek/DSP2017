@@ -4,10 +4,11 @@
  Author:	Pawe³ Strejczek
 */
 
-#include<ESP8266WiFi.h>
-#include<ESP8266mDNS.h>
-#include<WiFiUdp.h>
+#include "WebHandler.h"
+#include "EepromDataHandler.h"
+
 #include<ArduinoOTA.h>
+
 
 #include "ProximitySensorHandler.h"
 #include "DriveHandler.h"
@@ -16,34 +17,22 @@
 
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
+WebHandlerClass WebHandler;
 
 ProximityState proximityState;
 
-const char* ssid = "Zagumnie_prv";
-const char* password = "dracula123";
+const char* ssid = "***";
+const char* password = "***";
 
-void setup() {
-	// Setup parameters for OTA and serial debug
-	Serial.begin(115200);
-	
-	WiFi.mode(WIFI_STA);
-	WiFi.begin(ssid, password);
-
-	// wait for wifi connection
-	while(WiFi.waitForConnectResult() != WL_CONNECTED)
-	{
-		Serial.println("WiFi Connection failed");
-		delay(5000);
-		ESP.restart();
-	}
-
-	ArduinoOTA.onStart([] ()
+void prepareOTA()
+{
+	ArduinoOTA.onStart([]()
 	{
 		Serial.println("Transfer start ");
 	});
 
 
-	ArduinoOTA.onEnd([] ()
+	ArduinoOTA.onEnd([]()
 	{
 		Serial.println("\nTransfer end");
 	});
@@ -62,6 +51,15 @@ void setup() {
 	});
 
 	ArduinoOTA.begin();
+}
+
+void setup() {
+	// Setup parameters for OTA and serial debug
+	Serial.begin(115200);
+	
+	WebHandler.init();
+	
+	prepareOTA();
 	
 	Serial.println("Ready");
 	Serial.print("IP address: ");
@@ -96,4 +94,6 @@ void loop() {
 		Drive.startDrive();
 	}
 }
+
+
 
