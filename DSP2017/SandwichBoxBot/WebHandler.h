@@ -12,6 +12,9 @@
 
 #include<ESP8266WiFi.h>
 #include<ESP8266mDNS.h>
+#include <ESP8266HTTPUpdateServer.h>
+#include <ESP8266WebServer.h>
+
 #include<WiFiUdp.h>
 #include "EepromDataHandler.h"
 
@@ -33,9 +36,15 @@ private:
 	
 	void initializeWeb(WebResponderType type);
 	void setupAccessPoint();
-	void processAccessPointWebRequest(String req, WiFiClient client);
-	void processStationWebRequest(String req, WiFiClient client);
-	bool processGlobalRequests(String req, WiFiClient client);
+	
+	void webHandleRoot();
+	void webHandleChangeCredentials();
+	void webHandleClearEeprom();
+	void webHandleGetIp();
+	void webHandleCurrentMode();
+	void webHandleGetCurrentNetwork();
+	void webHandleNotFound();
+	
 	String getAvaiableNetworks();
 	String getIpAsString();
  protected:

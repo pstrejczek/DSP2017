@@ -6,14 +6,14 @@
 
 EepromDataHandlerClass EepromWebConfigHandler;
 MDNSResponder mdns;
-WiFiServer server(80);
-String st;
+ESP8266WebServer webServer(80);
+ESP8266HTTPUpdateServer updateServer;
 
 void WebHandlerClass::init()
 {
 	isInitialized = false;
 
-	delay(1000);
+	delay(100);
 
 	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
 	EepromWebConfigHandler.readEepromWiFiParameters(); 
@@ -25,7 +25,7 @@ void WebHandlerClass::init()
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(_ssid.c_str(), _password.c_str());
 	
-	if(EepromWebConfigHandler._ssid.length() > 1 && isWiFiConnected())
+	if(_ssid.length() > 1 && isWiFiConnected())
 	{
 		Serial.println("connected");
 		initializeWeb(STATION);
@@ -35,6 +35,7 @@ void WebHandlerClass::init()
 	{
 		Serial.println("not connected");
 		setupAccessPoint();
+		initializeWeb(ACCESS_POINT);
 		_currentResponderType = ACCESS_POINT;
 	}
 }
@@ -63,57 +64,15 @@ bool WebHandlerClass::checkMDns()
 {
 	mdns.update();
 
-	WiFiClient client = server.available();
-
-	delay(10);
-
-	if (!client) {
-		return false;
-	}
-
-	if (client.connected() && !client.available()) {
-		return false;
-	}
-
-	Serial.println("");
-	Serial.println("New client");
-
-	// Read the first line of HTTP request
-	if (client.localPort() != 80)
-	{
-		client.stopAll();
-		return true;
-	}
-	String request = client.readStringUntil('\r');
-
-	// First line of HTTP request looks like "GET /path HTTP/1.1"
-	// Retrieve the "/path" part by finding the spaces
-	int addr_start = request.indexOf(' ');
-	int addr_end = request.indexOf(' ', addr_start + 1);
-	if (addr_start == -1 || addr_end == -1) {
-		Serial.print("Invalid request: ");
-		Serial.println(request);
-		return false;
-	}
-	request = request.substring(addr_start + 1, addr_end);
-	Serial.print("Request: ");
-	Serial.println(request);
-	client.flush();
-	
-	if(processGlobalRequests(request, client)) return true; // if global request was processed, do not process requests for AP and STA
-
-	if (getCurrentResponderType() == ACCESS_POINT) {
-		processAccessPointWebRequest(request, client);
+	webServer.handleClient();
 		
-	}
-	else // STATION
-	{
-		processStationWebRequest(request, client);
-		
-	}
-
-	Serial.println("Request processed");
 	return true;
+}
+
+void webHandleNotFound()
+{
+	String response = "HTTP/1.1 404 Not Found\r\n\r\n";
+	webServer.send(404, "text/html", response);
 }
 
 void WebHandlerClass::initializeWeb(WebResponderType type)
@@ -129,8 +88,21 @@ void WebHandlerClass::initializeWeb(WebResponderType type)
 		}
 	}
 	Serial.println("mDNS responder started");
-	server.begin();
-	Serial.println("Server started");
+	
+	// prepare routing
+	webServer.on("/", std::bind(&WebHandlerClass::webHandleRoot, this));
+	webServer.on("/cleareeprom", std::bind(&WebHandlerClass::webHandleClearEeprom, this));
+	webServer.on("/getCurrentMode", std::bind(&WebHandlerClass::webHandleCurrentMode, this));
+	webServer.on("/getIp", std::bind(&WebHandlerClass::webHandleGetIp, this));
+	webServer.on("/getCurrentNetwork", std::bind(&WebHandlerClass::webHandleGetIp, this));
+	webServer.on("/saveconfig", HTTP_POST, std::bind(&WebHandlerClass::webHandleChangeCredentials, this));
+	webServer.onNotFound(std::bind(&WebHandlerClass::webHandleNotFound, this));
+	// Setup the update server
+	updateServer.setup(&webServer);
+	
+	// Start web server
+	webServer.begin();
+		
 	isInitialized = true;
 }
 
@@ -143,119 +115,111 @@ void WebHandlerClass::setupAccessPoint()
 	
 	WiFi.softAP("SANDWICHBOXBOT"); // set WiFi Access Point Name
 	
-	initializeWeb(ACCESS_POINT);
-
 	Serial.println("Acces point initialized ...");
 }
 
-void WebHandlerClass::processAccessPointWebRequest(String request, WiFiClient client)
+void WebHandlerClass::webHandleRoot()
 {
 	String response;
 
-	if (request == "/")
+	switch (_currentResponderType)
 	{
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>SANDWICHBOXBOT - My IP: ";
+	case ACCESS_POINT:
+		response = "<html>SANDWICHBOXBOT - My IP: ";
 		response += getIpAsString();
-		response += "<p>";
+		response += "<p>Avaiable Networks:</p><p>";
 		response += getAvaiableNetworks();
-		response += "<form method='get' action='saveconfig'><label>SSID: </label><input name='ssid' length=32><br><input name='pass' length=64><br><input type='submit' value='SAVE'></form>";
-		response += "</html>\r\n\r\n";
-		Serial.println("Sending 200");
-	}
-	else if (request.startsWith("/saveconfig?ssid=")) {
-		String qsid;
-		qsid = request.substring(request.indexOf("?") + 6, request.indexOf('&'));
-		Serial.println(qsid);
-		Serial.println("");
-		String qpass;
-		qpass = request.substring(request.lastIndexOf('=') + 1);
-		Serial.println(qpass);
-		Serial.println("");
-
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
-		//response += "Found ";
-		//response += request;
-
-		if (EepromWebConfigHandler.writeWifiDataToEeeprom(qsid, qpass))
-		{
-			response += "<p> configuration SAVED to EEPROM... reboot robot</html>\r\n\r\n";
-		}
-		else
-		{
-			response += "<p> configuration save ERROR... try again ! </html>\r\n\r\n";
-		}
-	}
-	else
-	{
-		response = "HTTP/1.1 404 Not Found\r\n\r\n";
-		Serial.println("Sending 404");
-	}
-
-	client.print(response);
-}
-
-void WebHandlerClass::processStationWebRequest(String request, WiFiClient client)
-{
-	String response;
-	
-	if (request == "/")
-	{
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT - My IP:";
+		response += "<form method='post' action='saveconfig'><label>SSID: </label><input name='ssid' length=32><br><label>PASS: </label><input type='password' name='pass' length=64><br><input type='submit' value='SAVE'></form>";
+		response += "</html>";
+		Serial.println("Sending 200 - ssid and password set page");
+		break;
+	case STATION:
+		response = "<html>Hello from SANDWICHBOXBOT <p>Network: ";
+		response += WiFi.SSID();
+		response += "</p><p>My IP: ";
 		response += getIpAsString();
-		response += "<p>";
-		response += "</html>\r\n\r\n";
+		response += "</p><p>";
+		response += "</html>";
 		Serial.println("Sending 200 - IP Address info for web browser");
+		break;
+	default:
+		break;
 	}
-	else if (request.startsWith("/cleareeprom")) {
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT";
-		response += "<p>Clearing the EEPROM<p>";
-		if (EepromWebConfigHandler.clearEeprom())
-		{
-			response += "<p>EEPROM cleared ... reboot robot</html>\r\n\r\n";
-		}
-		else
-		{
-			response += "<p>EEPROM clear ERROR... try again ! </html>\r\n\r\n";
-		}
-		Serial.println("Sending 200");
-		Serial.println("clearing eeprom");
+	webServer.send(200, "text/html", response);
+}
+
+void WebHandlerClass::webHandleChangeCredentials()
+{
+	if (!webServer.hasArg("ssid") || !webServer.hasArg("pass")) { webServer.send(500, "text/plain", "BAD ARGS"); return; }
+	String ssid = webServer.arg("ssid");
+	String password = webServer.arg("pass");
+
+	Serial.println(ssid);
+	Serial.println(password);
+
+	String response = "<!DOCTYPE HTML><html>";
+
+	if (EepromWebConfigHandler.writeWifiDataToEeeprom(ssid, password))
+	{
+		response += "<p> configuration SAVED to EEPROM... please cycle power on the robot</html>";
 	}
 	else
 	{
-		response = "HTTP/1.1 404 Not Found\r\n\r\n";
-		Serial.println("Sending 404");
+		response += "<p> configuration save ERROR... try again ! </html>";
 	}
-	client.print(response);
+
+	webServer.send(200, "text/html", response);
 }
 
-bool WebHandlerClass::processGlobalRequests(String request, WiFiClient client)
+void WebHandlerClass::webHandleClearEeprom()
 {
-	bool globalProcessed = false;
 	String response;
 
-	if (request.startsWith("/getCurrentMode"))
+	response = "<!DOCTYPE HTML><html>Hello from SANDWICHBOXBOT";
+	response += "<p>Clearing the EEPROM<p>";
+	if (EepromWebConfigHandler.clearEeprom())
 	{
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
-		if (_currentResponderType == ACCESS_POINT) response += "AP";
-		else response += "STA";
-		response += "<p>";
-		response += "</html>\r\n\r\n";
-		Serial.println("Sending 200 - current response mode");
-		globalProcessed = true;
+		response += "<p>EEPROM cleared ... please cycle power on the robot</html>";
 	}
-	else if (request.startsWith("/getIp"))
+	else
 	{
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
-		response += getIpAsString();
-		response += "<p>";
-		response += "</html>\r\n\r\n";
-		Serial.println("Sending 200 - IP Address info for app");
-		globalProcessed = true;
+		response += "<p>EEPROM clear ERROR... try again ! </html>";
 	}
-
-	client.print(response);
-	return(globalProcessed);
+	Serial.println("Sending 200");
+	Serial.println("clearing eeprom");
+	webServer.send(200, "text/html", response);
 }
+
+void WebHandlerClass::webHandleGetIp()
+{
+	String response = getIpAsString();
+	Serial.println("Sending 200 - IP Address info for app");
+	webServer.send(200, "text/plain", response);
+}
+
+void WebHandlerClass::webHandleCurrentMode()
+{
+	String response;
+
+	if (_currentResponderType == ACCESS_POINT) response = "AP";
+	else response = "STA";
+	Serial.println("Sending 200 - current response mode");
+	webServer.send(200, "text/plain", response);
+}
+
+void WebHandlerClass::webHandleGetCurrentNetwork()
+{
+	String response = WiFi.SSID();
+	Serial.println("Sending 200 - current network");
+	webServer.send(200, "text/plain", response);
+}
+
+void WebHandlerClass::webHandleNotFound()
+{
+	Serial.println("Sending 404");
+	webServer.send(404, "text/html", "");
+}
+
 
 String WebHandlerClass::getAvaiableNetworks()
 {
@@ -288,6 +252,8 @@ String WebHandlerClass::getAvaiableNetworks()
 		formatedNetworkList += "</li>";
 	}
 	formatedNetworkList += "</ul>";
+
+	return formatedNetworkList;
 }
 
 String WebHandlerClass::getIpAsString()

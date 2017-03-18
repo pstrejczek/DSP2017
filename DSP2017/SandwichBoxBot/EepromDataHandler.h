@@ -13,12 +13,14 @@
 
 class EepromDataHandlerClass
 {
+ private:
+	String _ssid;
+	String _password;
+
  protected:
-
-
+	
  public:
-	 String _ssid;
-	 String _password;
+	 
 	 String getSsid();
 	 String getPassword();
 	 bool clearEeprom();
