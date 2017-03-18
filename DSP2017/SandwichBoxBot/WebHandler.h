@@ -52,7 +52,7 @@ private:
 
  public:
 	bool isInitialized;
-	bool checkMDns();
+	bool processRequest();
 	void init();
 	WebResponderType getCurrentResponderType();
 };

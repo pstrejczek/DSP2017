@@ -60,7 +60,7 @@ bool WebHandlerClass::isWiFiConnected()
 	return(false);
 }
 
-bool WebHandlerClass::checkMDns()
+bool WebHandlerClass::processRequest()
 {
 	mdns.update();
 
