@@ -4,17 +4,18 @@
 
 #include "EepromDataHandler.h"
 
-void EepromDataHandlerClass::clearEeprom()
+bool EepromDataHandlerClass::clearEeprom()
 {
 	for (int i = 0; i < 128; ++i)
 	{
 		EEPROM.write(i, 0);
 	}
-}
 
-EepromDataHandlerClass::EepromDataHandlerClass()
-{
+	EEPROM.end();
+
+	Serial.println("Eeprom cleared");
 	
+	return true;
 }
 
 String EepromDataHandlerClass::getSsid()
@@ -33,6 +34,7 @@ bool EepromDataHandlerClass::writeWifiDataToEeeprom(String ssid, String password
 	Serial.println(password);
 
 	clearEeprom();
+	EEPROM.begin(512);
 
 	for (int i = 0; i < ssid.length(); ++i)
 	{

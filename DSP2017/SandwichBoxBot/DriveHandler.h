@@ -14,15 +14,29 @@
 #define DRIVE_BIA 5
 #define DRIVE_BIB 4
 
+#define FULLSPEED 1023
+#define STOP 0
+
 typedef enum DriveDirection {
 	FORWARD,
 	BACKWARD
+};
+
+typedef enum ManualCommand {
+	MANUAL_FORWARD,
+	MANUAL_BACKWARD,
+	MANUAL_RIGHT,
+	MANUAL_LEFT
 };
 
 class DriveHandlerClass
 {
  private:
 	DriveDirection direction;
+	void manualForward();
+	void manualBackward();
+	void manualLeft();
+	void manualRight();
  protected:
 
 
@@ -31,6 +45,7 @@ class DriveHandlerClass
 	void stopDrive();
 	void startDrive();
 	void reverseDirection();
+	void manualSteering(ManualCommand manualCommand);
 };
 
 extern DriveHandlerClass DriveHandler;

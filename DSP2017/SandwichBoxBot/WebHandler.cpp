@@ -11,33 +11,43 @@ String st;
 
 void WebHandlerClass::init()
 {
+	isInitialized = false;
+
 	delay(1000);
 
 	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
-
-	EepromWebConfigHandler.readEepromWiFiParameters();
+	EepromWebConfigHandler.readEepromWiFiParameters(); 
 	
 	_ssid = EepromWebConfigHandler.getSsid();
 	_password = EepromWebConfigHandler.getPassword();
 
+	WiFi.disconnect();
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(_ssid.c_str(), _password.c_str());
 	
 	if(EepromWebConfigHandler._ssid.length() > 1 && isWiFiConnected())
 	{
 		Serial.println("connected");
-		initializeWeb(0);
+		initializeWeb(STATION);
+		_currentResponderType = STATION;
 	}
 	else
 	{
 		Serial.println("not connected");
-		setupAp();
+		setupAccessPoint();
+		_currentResponderType = ACCESS_POINT;
 	}
+}
+
+WebResponderType WebHandlerClass::getCurrentResponderType()
+{
+	return _currentResponderType;
 }
 
 bool WebHandlerClass::isWiFiConnected()
 {
 	int noOfTries = 0;
+
 	while (noOfTries < 3) {
 		int cResult = WiFi.waitForConnectResult();
 		if (cResult == WL_CONNECTED) { return(true); }
@@ -45,118 +55,68 @@ bool WebHandlerClass::isWiFiConnected()
 		WiFi.reconnect();
 		noOfTries++;
 	}
+
 	return(false);
 }
 
-int WebHandlerClass::checkMDns(int type)
+bool WebHandlerClass::checkMDns()
 {
 	mdns.update();
 
 	WiFiClient client = server.available();
+
+	delay(10);
+
 	if (!client) {
-		return(20);
+		return false;
 	}
 
-	while (client.connected() && !client.available()) {
-		delay(1);
+	if (client.connected() && !client.available()) {
+		return false;
 	}
+
 	Serial.println("");
 	Serial.println("New client");
 
 	// Read the first line of HTTP request
-	String req = client.readStringUntil('\r');
+	if (client.localPort() != 80)
+	{
+		client.stopAll();
+		return true;
+	}
+	String request = client.readStringUntil('\r');
 
 	// First line of HTTP request looks like "GET /path HTTP/1.1"
 	// Retrieve the "/path" part by finding the spaces
-	int addr_start = req.indexOf(' ');
-	int addr_end = req.indexOf(' ', addr_start + 1);
+	int addr_start = request.indexOf(' ');
+	int addr_end = request.indexOf(' ', addr_start + 1);
 	if (addr_start == -1 || addr_end == -1) {
 		Serial.print("Invalid request: ");
-		Serial.println(req);
-		return(20);
+		Serial.println(request);
+		return false;
 	}
-	req = req.substring(addr_start + 1, addr_end);
+	request = request.substring(addr_start + 1, addr_end);
 	Serial.print("Request: ");
-	Serial.println(req);
+	Serial.println(request);
 	client.flush();
 	
-	String s;
-	
-	if (type == 1) {
-		if (req == "/")
-		{
-			IPAddress ip = WiFi.softAPIP();
-			String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
-			s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>SANDWICHBOXBOT - My IP: ";
-			s += ipStr;
-			s += "<p>";
-			s += st;
-			s += "<form method='get' action='saveconfig'><label>SSID: </label><input name='ssid' length=32><input name='pass' length=64><input type='submit'></form>";
-			s += "</html>\r\n\r\n";
-			Serial.println("Sending 200");
-		}
-		else if (req.startsWith("/saveconfig?ssid=")) {
-			// /a?ssid=blahhhh&pass=poooo
-			String qsid;
-			qsid = req.substring(req.indexOf("?") + 6, req.indexOf('&'));
-			Serial.println(qsid);
-			Serial.println("");
-			String qpass;
-			qpass = req.substring(req.lastIndexOf('=') + 1);
-			Serial.println(qpass);
-			Serial.println("");
+	if(processGlobalRequests(request, client)) return true; // if global request was processed, do not process requests for AP and STA
 
-			s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT ";
-			s += "Found ";
-			s += req;
-
-			if (EepromWebConfigHandler.writeWifiDataToEeeprom(qsid, qpass))
-			{
-				s += "<p> configuration saved to EEPROM... reboot robot</html>\r\n\r\n";
-			}
-			else
-			{
-				s += "<p> configuration save ERROR... try again ! </html>\r\n\r\n";
-			}
-	    }
-		else
-		{
-			s = "HTTP/1.1 404 Not Found\r\n\r\n";
-			Serial.println("Sending 404");
-		}
+	if (getCurrentResponderType() == ACCESS_POINT) {
+		processAccessPointWebRequest(request, client);
+		
 	}
-	else
+	else // STATION
 	{
-		if (req == "/")
-		{
-			IPAddress ip = WiFi.localIP();
-			String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
-			s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT - My IP:";
-			s += ipStr;
-			s += "<p>";
-			s += "</html>\r\n\r\n";
-			Serial.println("Sending 200");
-		}
-		else if (req.startsWith("/cleareeprom")) {
-			s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT";
-			s += "<p>Clearing the EEPROM<p>";
-			s += "</html>\r\n\r\n";
-			Serial.println("Sending 200");
-			Serial.println("clearing eeprom");
-			//for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
-			//EEPROM.commit();
-		}
-		else
-		{
-			s = "HTTP/1.1 404 Not Found\r\n\r\n";
-			Serial.println("Sending 404");
-		}
+		processStationWebRequest(request, client);
+		
 	}
-	client.print(s);
-	return(20);
+
+	Serial.println("Request processed");
+	return true;
 }
 
-void WebHandlerClass::initializeWeb(int type)
+void WebHandlerClass::initializeWeb(WebResponderType type)
 {
 	Serial.println("");
 	Serial.println("WiFi connected");
@@ -171,62 +131,173 @@ void WebHandlerClass::initializeWeb(int type)
 	Serial.println("mDNS responder started");
 	server.begin();
 	Serial.println("Server started");
-	int b = 20;
-	int c = 0;
-	while (b == 20) {
-		b = checkMDns(type);
-	}
+	isInitialized = true;
 }
 
-void WebHandlerClass::setupAp()
+void WebHandlerClass::setupAccessPoint()
 {
 	WiFi.mode(WIFI_STA);
 	WiFi.disconnect();
+	
 	delay(100);
-	int n = WiFi.scanNetworks();
-	Serial.println("scan done");
-	if (n == 0)
+	
+	WiFi.softAP("SANDWICHBOXBOT"); // set WiFi Access Point Name
+	
+	initializeWeb(ACCESS_POINT);
+
+	Serial.println("Acces point initialized ...");
+}
+
+void WebHandlerClass::processAccessPointWebRequest(String request, WiFiClient client)
+{
+	String response;
+
+	if (request == "/")
+	{
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>SANDWICHBOXBOT - My IP: ";
+		response += getIpAsString();
+		response += "<p>";
+		response += getAvaiableNetworks();
+		response += "<form method='get' action='saveconfig'><label>SSID: </label><input name='ssid' length=32><br><input name='pass' length=64><br><input type='submit' value='SAVE'></form>";
+		response += "</html>\r\n\r\n";
+		Serial.println("Sending 200");
+	}
+	else if (request.startsWith("/saveconfig?ssid=")) {
+		String qsid;
+		qsid = request.substring(request.indexOf("?") + 6, request.indexOf('&'));
+		Serial.println(qsid);
+		Serial.println("");
+		String qpass;
+		qpass = request.substring(request.lastIndexOf('=') + 1);
+		Serial.println(qpass);
+		Serial.println("");
+
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
+		//response += "Found ";
+		//response += request;
+
+		if (EepromWebConfigHandler.writeWifiDataToEeeprom(qsid, qpass))
+		{
+			response += "<p> configuration SAVED to EEPROM... reboot robot</html>\r\n\r\n";
+		}
+		else
+		{
+			response += "<p> configuration save ERROR... try again ! </html>\r\n\r\n";
+		}
+	}
+	else
+	{
+		response = "HTTP/1.1 404 Not Found\r\n\r\n";
+		Serial.println("Sending 404");
+	}
+
+	client.print(response);
+}
+
+void WebHandlerClass::processStationWebRequest(String request, WiFiClient client)
+{
+	String response;
+	
+	if (request == "/")
+	{
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT - My IP:";
+		response += getIpAsString();
+		response += "<p>";
+		response += "</html>\r\n\r\n";
+		Serial.println("Sending 200 - IP Address info for web browser");
+	}
+	else if (request.startsWith("/cleareeprom")) {
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from SANDWICHBOXBOT";
+		response += "<p>Clearing the EEPROM<p>";
+		if (EepromWebConfigHandler.clearEeprom())
+		{
+			response += "<p>EEPROM cleared ... reboot robot</html>\r\n\r\n";
+		}
+		else
+		{
+			response += "<p>EEPROM clear ERROR... try again ! </html>\r\n\r\n";
+		}
+		Serial.println("Sending 200");
+		Serial.println("clearing eeprom");
+	}
+	else
+	{
+		response = "HTTP/1.1 404 Not Found\r\n\r\n";
+		Serial.println("Sending 404");
+	}
+	client.print(response);
+}
+
+bool WebHandlerClass::processGlobalRequests(String request, WiFiClient client)
+{
+	bool globalProcessed = false;
+	String response;
+
+	if (request.startsWith("/getCurrentMode"))
+	{
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
+		if (_currentResponderType == ACCESS_POINT) response += "AP";
+		else response += "STA";
+		response += "<p>";
+		response += "</html>\r\n\r\n";
+		Serial.println("Sending 200 - current response mode");
+		globalProcessed = true;
+	}
+	else if (request.startsWith("/getIp"))
+	{
+		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>";
+		response += getIpAsString();
+		response += "<p>";
+		response += "</html>\r\n\r\n";
+		Serial.println("Sending 200 - IP Address info for app");
+		globalProcessed = true;
+	}
+
+	client.print(response);
+	return(globalProcessed);
+}
+
+String WebHandlerClass::getAvaiableNetworks()
+{
+	int networksCount = WiFi.scanNetworks();
+
+	Serial.println("scanning for networks done ...");
+
+	if (networksCount == 0)
 		Serial.println("no networks found");
 	else
 	{
-		Serial.print(n);
+		Serial.print(networksCount);
 		Serial.println(" networks found");
-		for (int i = 0; i < n; ++i)
-		{
-			// Print SSID and RSSI for each network found
-			Serial.print(i + 1);
-			Serial.print(": ");
-			Serial.print(WiFi.SSID(i));
-			Serial.print(" (");
-			Serial.print(WiFi.RSSI(i));
-			Serial.print(")");
-			Serial.println((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*");
-			delay(10);
-		}
 	}
-	Serial.println("");
-	st = "<ul>";
-	for (int i = 0; i < n; ++i)
+
+	// prepare HTML formatted network list
+
+	String formatedNetworkList = "<ul>";
+	for (int i = 0; i < networksCount; ++i)
 	{
 		// Print SSID and RSSI for each network found
-		st += "<li>";
-		st += i + 1;
-		st += ": ";
-		st += WiFi.SSID(i);
-		st += " (";
-		st += WiFi.RSSI(i);
-		st += ")";
-		st += (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*";
-		st += "</li>";
+		formatedNetworkList += "<li>";
+		formatedNetworkList += i + 1;
+		formatedNetworkList += ": ";
+		formatedNetworkList += WiFi.SSID(i);
+		formatedNetworkList += " (";
+		formatedNetworkList += WiFi.RSSI(i);
+		formatedNetworkList += ")";
+		formatedNetworkList += (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*";
+		formatedNetworkList += "</li>";
 	}
-	st += "</ul>";
-	delay(100);
-	WiFi.softAP("SANDWICHBOXBOT");
-	Serial.println("softap");
-	Serial.println("");
-	initializeWeb(1);
-	Serial.println("over");
+	formatedNetworkList += "</ul>";
 }
+
+String WebHandlerClass::getIpAsString()
+{
+	IPAddress ip = WiFi.localIP();
+	String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+	return ipStr;
+}
+
+
 
 
 

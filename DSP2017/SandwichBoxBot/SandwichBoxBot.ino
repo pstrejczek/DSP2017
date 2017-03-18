@@ -9,7 +9,6 @@
 
 #include<ArduinoOTA.h>
 
-
 #include "ProximitySensorHandler.h"
 #include "DriveHandler.h"
 
@@ -21,14 +20,18 @@ WebHandlerClass WebHandler;
 
 ProximityState proximityState;
 
-const char* ssid = "***";
-const char* password = "***";
-
 void prepareOTA()
 {
 	ArduinoOTA.onStart([]()
 	{
-		Serial.println("Transfer start ");
+		String type;
+		if (ArduinoOTA.getCommand() == U_FLASH)
+			type = "sketch";
+		else // U_SPIFFS
+			type = "filesystem";
+
+		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+		Serial.println("Start updating " + type);
 	});
 
 
@@ -54,28 +57,33 @@ void prepareOTA()
 }
 
 void setup() {
-	// Setup parameters for OTA and serial debug
+
 	Serial.begin(115200);
 	
 	WebHandler.init();
-	
-	prepareOTA();
-	
-	Serial.println("Ready");
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
+		
+	//prepareOTA();
 
 	// Setup robot
 	pinMode(BUZZER, OUTPUT);
 	proximityState = NONE;
 }
 
-
-
-
-void loop() {
-	ArduinoOTA.handle(); // handle the OTA request
-
+void loop() 
+{
+	// Web and OTA
+	if (WebHandler.isInitialized)
+	{
+		// Process OTA requests
+		if (WebHandler.getCurrentResponderType() == STATION)
+		{
+			ArduinoOTA.handle();
+		}
+		// Process MDNs requests
+		WebHandler.checkMDns();
+	}
+	
+	// Robot logic
 	proximityState = ProximitySensors.checkState();
 	
 	if(proximityState == BOTH || proximityState == LEFT || proximityState == RIGHT)
@@ -83,7 +91,7 @@ void loop() {
 		digitalWrite(BUZZER, HIGH);
 		Drive.stopDrive();
 		
-		delay(2000);
+		//delay(2000);
 
 		digitalWrite(BUZZER, LOW);
 		Drive.reverseDirection();

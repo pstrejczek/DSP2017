@@ -13,18 +13,15 @@
 
 class EepromDataHandlerClass
 {
-private:
-	
-	void clearEeprom();
  protected:
 
 
  public:
-	 EepromDataHandlerClass();
 	 String _ssid;
 	 String _password;
 	 String getSsid();
 	 String getPassword();
+	 bool clearEeprom();
 	 bool writeWifiDataToEeeprom(String ssid, String password);
 	 bool readEepromWiFiParameters();
 	 void init();

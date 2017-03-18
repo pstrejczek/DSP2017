@@ -1,5 +1,37 @@
 #include "DriveHandler.h"
 
+void DriveHandlerClass::manualForward()
+{
+	analogWrite(DRIVE_AIA, FULLSPEED);
+	analogWrite(DRIVE_AIB, STOP);
+	analogWrite(DRIVE_BIA, FULLSPEED);
+	analogWrite(DRIVE_BIB, STOP);
+}
+
+void DriveHandlerClass::manualBackward()
+{
+	analogWrite(DRIVE_AIA, STOP);
+	analogWrite(DRIVE_AIB, FULLSPEED);
+	analogWrite(DRIVE_BIA, STOP);
+	analogWrite(DRIVE_BIB, FULLSPEED);
+}
+
+void DriveHandlerClass::manualLeft()
+{
+	analogWrite(DRIVE_AIA, STOP);
+	analogWrite(DRIVE_AIB, FULLSPEED);
+	analogWrite(DRIVE_BIA, FULLSPEED);
+	analogWrite(DRIVE_BIB, STOP);
+}
+
+void DriveHandlerClass::manualRight()
+{
+	analogWrite(DRIVE_AIA, FULLSPEED);
+	analogWrite(DRIVE_AIB, STOP);
+	analogWrite(DRIVE_BIA, STOP);
+	analogWrite(DRIVE_BIB, FULLSPEED);
+}
+
 DriveHandlerClass::DriveHandlerClass()
 {
 	direction = FORWARD;
@@ -42,6 +74,30 @@ void DriveHandlerClass::reverseDirection()
 {
 	if (direction == FORWARD) direction = BACKWARD;
 	else direction = FORWARD;
+}
+
+void DriveHandlerClass::manualSteering(ManualCommand manualCommand)
+{
+	switch(manualCommand)
+	{
+	case MANUAL_FORWARD:
+		manualForward();
+		break;
+	case MANUAL_BACKWARD:
+		manualBackward();
+		break;
+	case MANUAL_RIGHT:
+			manualRight();
+			break;
+	case MANUAL_LEFT:
+		manualLeft();
+		break;
+	default:
+		stopDrive();
+		break;
+	}
+	delay(1000);
+	stopDrive();
 }
 
 
