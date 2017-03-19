@@ -5,7 +5,6 @@
 #include "WebHandler.h"
 
 EepromDataHandlerClass EepromWebConfigHandler;
-MDNSResponder mdns;
 ESP8266WebServer webServer(80);
 ESP8266HTTPUpdateServer updateServer;
 
@@ -20,9 +19,13 @@ void WebHandlerClass::init()
 	
 	_ssid = EepromWebConfigHandler.getSsid();
 	_password = EepromWebConfigHandler.getPassword();
+	
+	_hostName = "sandwichboxbot";
 
 	WiFi.disconnect();
 	WiFi.mode(WIFI_STA);
+	WiFi.hostname(_hostName);
+
 	WiFi.begin(_ssid.c_str(), _password.c_str());
 	
 	if(_ssid.length() > 1 && isWiFiConnected())
@@ -62,8 +65,8 @@ bool WebHandlerClass::isWiFiConnected()
 
 bool WebHandlerClass::processRequest()
 {
-	mdns.update();
-
+	MDNS.update();
+	
 	webServer.handleClient();
 		
 	return true;
@@ -81,13 +84,16 @@ void WebHandlerClass::initializeWeb(WebResponderType type)
 	Serial.println("WiFi connected");
 	Serial.println(WiFi.localIP());
 	Serial.println(WiFi.softAPIP());
-	if (!mdns.begin("sandwichboxbot", WiFi.localIP())) {
+
+	// Start MDNS
+	if (!MDNS.begin(_hostName.c_str())) {
 		Serial.println("Error setting up MDNS responder!");
 		while (true) {
 			delay(1000);
 		}
 	}
-	Serial.println("mDNS responder started");
+	
+	Serial.println("mDNS started");
 	
 	// prepare routing
 	webServer.on("/", std::bind(&WebHandlerClass::webHandleRoot, this));
@@ -102,8 +108,12 @@ void WebHandlerClass::initializeWeb(WebResponderType type)
 	
 	// Start web server
 	webServer.begin();
-		
+	
+	// Register service to be discovered in bonjour
+	MDNS.addService("sbbot", "tcp", 1234);
+
 	isInitialized = true;
+	Serial.println("intialization end");
 }
 
 void WebHandlerClass::setupAccessPoint()

@@ -10,10 +10,11 @@
 #endif
 
 
-#include<ESP8266WiFi.h>
-#include<ESP8266mDNS.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoOTA.h>
 
 #include<WiFiUdp.h>
 #include "EepromDataHandler.h"
@@ -30,6 +31,7 @@ class WebHandlerClass
 private:
 	String _ssid;
 	String _password;
+	String _hostName;
 	WebResponderType _currentResponderType;
 	
 	bool isWiFiConnected();
