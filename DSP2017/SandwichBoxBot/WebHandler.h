@@ -18,26 +18,18 @@
 
 #include<WiFiUdp.h>
 #include "EepromDataHandler.h"
-
-typedef enum WebResponderType
-{
-	ACCESS_POINT,
-	STATION
-};
-
+#include "WiFiHandler.h"
 
 class WebHandlerClass
 {
 private:
 	String _ssid;
 	String _password;
-	String _hostName;
-	WebResponderType _currentResponderType;
+
+	EepromDataHandlerClass _eeprom;
+	WiFiHandlerClass _wifi;
 	
-	bool isWiFiConnected();
-	
-	void initializeWeb(WebResponderType type);
-	void setupAccessPoint();
+	void initializeWeb();
 	
 	void webHandleRoot();
 	void webHandleChangeCredentials();
@@ -48,15 +40,13 @@ private:
 	void webHandleNotFound();
 	
 	String getAvaiableNetworks();
-	String getIpAsString();
  protected:
 
 
  public:
 	bool isInitialized;
 	bool processRequest();
-	void init();
-	WebResponderType getCurrentResponderType();
+	void init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi);
 };
 
 extern WebHandlerClass WebHandler;

@@ -4,10 +4,11 @@
  Author:	Pawe³ Strejczek
 */
 
+#include "WiFiHandler.h"
 #include "WebHandler.h"
 #include "EepromDataHandler.h"
-
-
+#include "EepromDataHandler.h"
+#include "WiFiHandler.h"
 
 
 
@@ -16,8 +17,12 @@
 
 #define BUZZER 14
 
+
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
+
+EepromDataHandlerClass EepromWebConfigHandler;
+WiFiHandlerClass WiFiHandler;
 WebHandlerClass WebHandler;
 
 ProximityState proximityState;
@@ -26,8 +31,16 @@ void setup() {
 
 	Serial.begin(115200);
 	
-	WebHandler.init();
+	
+	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
+	EepromWebConfigHandler.readEepromWiFiParameters();
+	WiFiHandler.init(EepromWebConfigHandler.getSsid(), EepromWebConfigHandler.getPassword());
+
+	// Initialize WebServer
+	WebHandler.init(EepromWebConfigHandler, WiFiHandler);
 		
+	// Initialize CommUdpServer
+
 	// Setup robot
 	pinMode(BUZZER, OUTPUT);
 	proximityState = NONE;
@@ -42,6 +55,10 @@ void loop()
 		WebHandler.processRequest();
 	}
 	
+	// UDP Command Server
+
+	// Process Command
+
 	// Robot logic
 	proximityState = ProximitySensors.checkState();
 	

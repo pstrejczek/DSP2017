@@ -89,4 +89,5 @@ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Rel
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WebServer\src/detail/RequestHandler.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ArduinoOTA/ArduinoOTA.h \
  C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\EepromDataHandler.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\EEPROM/EEPROM.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\EEPROM/EEPROM.h \
+ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WiFiHandler.h

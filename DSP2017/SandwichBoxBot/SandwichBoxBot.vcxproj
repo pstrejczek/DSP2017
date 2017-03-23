@@ -90,6 +90,7 @@
     <ClInclude Include="EepromDataHandler.h" />
     <ClInclude Include="ProximitySensorHandler.h" />
     <ClInclude Include="WebHandler.h" />
+    <ClInclude Include="WiFiHandler.h" />
     <ClInclude Include="__vm\.SandwichBoxBot.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
     <ClCompile Include="EepromDataHandler.cpp" />
     <ClCompile Include="ProximitySensorHandler.cpp" />
     <ClCompile Include="WebHandler.cpp" />
+    <ClCompile Include="WiFiHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,6 @@
-C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\SandwichBoxBot.cpp.o: \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\SandwichBoxBot.cpp \
+C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WiFiHandler.cpp.o: \
+ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WiFiHandler.cpp \
+ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WiFiHandler.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266/arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266/tools/sdk/libc/xtensa-lx106-elf/include/stdlib.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266/tools/sdk/libc/xtensa-lx106-elf/include/machine/ieeefp.h \
@@ -60,7 +61,6 @@ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Rel
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266/debug.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\variants\nodemcu/pins_arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\variants\nodemcu/../generic/common.h \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WiFiHandler.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/ESP8266WiFi.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/include/wl_definitions.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266/IPAddress.h \
@@ -79,17 +79,4 @@ C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Rel
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/WiFiServer.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266/Server.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/WiFiClientSecure.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/include/ssl.h \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\WebHandler.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266mDNS/ESP8266mDNS.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/WiFiUdp.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266/Udp.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/include/slist.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266HTTPUpdateServer\src/ESP8266HTTPUpdateServer.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WebServer\src/ESP8266WebServer.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WebServer\src/detail/RequestHandler.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ArduinoOTA/ArduinoOTA.h \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\EepromDataHandler.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\EEPROM/EEPROM.h \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\ProximitySensorHandler.h \
- C:\Users\oem\AppData\Local\Temp\VMBuilds\SandwichBoxBot\esp8266com_nodemcuv2\Release\DriveHandler.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src/include/ssl.h
