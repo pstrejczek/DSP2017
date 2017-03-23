@@ -12,6 +12,7 @@ void UdpCommHandlerClass::init(int localPort)
 {
 	_localUdpPort = localPort;
 	Udp.begin(_localUdpPort);
+	isInitialized = true;
 }
 
 byte UdpCommHandlerClass::calculateChecksum(unsigned char* packet, int dataLength)
@@ -20,11 +21,10 @@ byte UdpCommHandlerClass::calculateChecksum(unsigned char* packet, int dataLengt
 
 	for(int i=0; i < dataLength; i++)
 	{
-		sum = packet[1 + i] * i;
+		sum += packet[2 + i];
 	}
 
-	byte moduloSum = sum % dataLength;
-	return moduloSum;
+	return sum;
 }
 
 bool UdpCommHandlerClass::isFrameCorrect(unsigned char* packet, int packetLength)
@@ -64,7 +64,7 @@ void UdpCommHandlerClass::sendCommandError()
 	sendUdpPacket(errorResponse);
 }
 
-void UdpCommHandlerClass::confirmCommand(Command command)
+void UdpCommHandlerClass::confirmCommand(int command)
 {
 	byte confirmResponse[4];
 
@@ -99,6 +99,8 @@ Command UdpCommHandlerClass::processCommandRequest()
 	}
 	
 	int command = incomingPacket[3];
+
+	confirmCommand(command);
 
 	switch(command)
 	{

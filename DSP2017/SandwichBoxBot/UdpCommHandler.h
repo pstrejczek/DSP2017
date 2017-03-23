@@ -38,7 +38,7 @@ class UdpCommHandlerClass
 	 bool isFrameCorrect(unsigned char* packet, int packetLength);
 	 void sendUdpPacket(unsigned char *packet);
 	 void sendCommandError();
-	 void confirmCommand(Command command);
+	 void confirmCommand(int command);
  protected:
 
 

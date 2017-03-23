@@ -66,6 +66,7 @@ void loop()
 	if (UdpCommHandler.isInitialized)
 	{
 		currentCommand = UdpCommHandler.processCommandRequest();
+		if (currentCommand == C_PACKET_ERROR) Serial.println("UDP packet data error");
 	}
 
 	// Process Command
