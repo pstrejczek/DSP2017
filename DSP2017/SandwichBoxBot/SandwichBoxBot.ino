@@ -4,19 +4,21 @@
  Author:	Pawe³ Strejczek
 */
 
+#include "UdpCommHandler.h"
 #include "WiFiHandler.h"
 #include "WebHandler.h"
 #include "EepromDataHandler.h"
-#include "EepromDataHandler.h"
-#include "WiFiHandler.h"
-
-
-
 #include "ProximitySensorHandler.h"
 #include "DriveHandler.h"
 
 #define BUZZER 14
+#define LOCAL_UDP_PORT 1234;
 
+enum CurrentMode
+{
+	MODE_MANUAL,
+	MODE_AUTO
+};
 
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
@@ -24,13 +26,16 @@ ProximitySensorHandlerClass ProximitySensors;
 EepromDataHandlerClass EepromWebConfigHandler;
 WiFiHandlerClass WiFiHandler;
 WebHandlerClass WebHandler;
+UdpCommHandlerClass UdpCommHandler;
 
 ProximityState proximityState;
+CurrentMode currentMode;
 
 void setup() {
 
 	Serial.begin(115200);
 	
+	currentMode = MODE_MANUAL;
 	
 	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
 	EepromWebConfigHandler.readEepromWiFiParameters();
@@ -39,7 +44,8 @@ void setup() {
 	// Initialize WebServer
 	WebHandler.init(EepromWebConfigHandler, WiFiHandler);
 		
-	// Initialize CommUdpServer
+	// Initialize UdpCommHandler
+	UdpCommHandler.init(1234);
 
 	// Setup robot
 	pinMode(BUZZER, OUTPUT);
@@ -48,6 +54,7 @@ void setup() {
 
 void loop() 
 {
+	Command currentCommand = C_NONE;
 	// Web and OTA
 	if (WebHandler.isInitialized)
 	{
@@ -56,17 +63,36 @@ void loop()
 	}
 	
 	// UDP Command Server
+	if (UdpCommHandler.isInitialized)
+	{
+		currentCommand = UdpCommHandler.processCommandRequest();
+	}
 
 	// Process Command
-
-	// Robot logic
-	proximityState = ProximitySensors.checkState();
+	switch(currentCommand)
+	{
+	case C_AUTO: currentMode = MODE_AUTO; Serial.println("SET MODE AUTO"); break;
+	case C_MANUAL: currentMode = MODE_MANUAL; Serial.println("SET MODE MANUAL"); break;
+	case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
+	case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
+	case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
+	case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
+	default: break;
+	}
 	
-	if(proximityState == BOTH || proximityState == LEFT || proximityState == RIGHT)
+	// Robot logic
+	robotLogic();
+}
+
+void robotLogic()
+{
+	proximityState = ProximitySensors.checkState();
+
+	if (proximityState == BOTH || proximityState == LEFT || proximityState == RIGHT)
 	{
 		digitalWrite(BUZZER, HIGH);
 		Drive.stopDrive();
-		
+
 		//delay(2000);
 
 		digitalWrite(BUZZER, LOW);

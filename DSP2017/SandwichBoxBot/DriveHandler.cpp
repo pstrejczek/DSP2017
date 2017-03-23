@@ -6,6 +6,7 @@ void DriveHandlerClass::manualForward()
 	analogWrite(DRIVE_AIB, STOP);
 	analogWrite(DRIVE_BIA, FULLSPEED);
 	analogWrite(DRIVE_BIB, STOP);
+	Serial.println("MANUAL FORWARD");
 }
 
 void DriveHandlerClass::manualBackward()
@@ -14,6 +15,7 @@ void DriveHandlerClass::manualBackward()
 	analogWrite(DRIVE_AIB, FULLSPEED);
 	analogWrite(DRIVE_BIA, STOP);
 	analogWrite(DRIVE_BIB, FULLSPEED);
+	Serial.println("MANUAL BACKWARD");
 }
 
 void DriveHandlerClass::manualLeft()
@@ -22,6 +24,7 @@ void DriveHandlerClass::manualLeft()
 	analogWrite(DRIVE_AIB, FULLSPEED);
 	analogWrite(DRIVE_BIA, FULLSPEED);
 	analogWrite(DRIVE_BIB, STOP);
+	Serial.println("MANUAL LEFT");
 }
 
 void DriveHandlerClass::manualRight()
@@ -30,6 +33,7 @@ void DriveHandlerClass::manualRight()
 	analogWrite(DRIVE_AIB, STOP);
 	analogWrite(DRIVE_BIA, STOP);
 	analogWrite(DRIVE_BIB, FULLSPEED);
+	Serial.println("MANUAL RIGHT");
 }
 
 DriveHandlerClass::DriveHandlerClass()
