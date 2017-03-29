@@ -79,6 +79,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\LogData.cs" />
+    <Compile Include="ViewConverters\RobotModeToColorConverter.cs" />
+    <Compile Include="ViewConverters\RobotModeToStringConverter.cs" />
     <Compile Include="ViewConverters\RobotWifiModeToColorConverter.cs" />
     <Compile Include="ViewConverters\RobotWiFiModeToStringConverter.cs" />
     <Compile Include="ViewModels\SetParametersViewModel.cs" />

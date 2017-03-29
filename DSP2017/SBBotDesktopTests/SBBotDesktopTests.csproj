@@ -68,6 +68,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\ViewConverters\ConnectionStateToColorConverterTests.cs" />
     <Compile Include="UnitTests\ViewConverters\ConnectionStateToStringConverterTests.cs" />
+    <Compile Include="UnitTests\ViewConverters\RobotModeToColorConverterTests.cs" />
+    <Compile Include="UnitTests\ViewConverters\RobotModeToStringConverterTests.cs" />
     <Compile Include="UnitTests\ViewConverters\RobotWiFiModeToColorConverterTests.cs" />
     <Compile Include="UnitTests\ViewConverters\RobotWiFiModeToStringConverterTests.cs" />
   </ItemGroup>

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
-using SBBotDesktop.Communication;
+﻿using SBBotDesktop.Communication;
 using SBBotDesktop.ViewConverters;
+using System;
+using System.Globalization;
 using Xunit;
 
 namespace SBBotDesktopTests.UnitTests.ViewConverters
@@ -9,7 +9,7 @@ namespace SBBotDesktopTests.UnitTests.ViewConverters
     public class RobotWiFiModeToStringConverterTests
     {
         [Fact]
-        public void ConverterReturnsNotConnectedOnInputFalse()
+        public void ConverterReturnsAccessPointOnInputAccessPoint()
         {
             var converter = new RobotWiFiModeToStringConverter();
 
@@ -17,7 +17,7 @@ namespace SBBotDesktopTests.UnitTests.ViewConverters
         }
 
         [Fact]
-        public void ConverterReturnsConnectedOnInputTrue()
+        public void ConverterReturnsStationOnInputStation()
         {
             var converter = new RobotWiFiModeToStringConverter();
 
