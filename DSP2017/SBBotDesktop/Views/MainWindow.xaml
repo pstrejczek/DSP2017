@@ -4,9 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SBBotDesktop"
+        xmlns:viewHelpers="clr-namespace:SBBotDesktop.ViewHelpers"
+        xmlns:viewModels="clr-namespace:SBBotDesktop.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="Sandwich Box Bot Desktop" Height="350" Width="525">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Window.DataContext>
+    <DockPanel>
+        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="Gray" Foreground="White" >SANDWICH BOX BOT</Label>
+        <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
+            <Label>Connection State:</Label>
+            <Label Background="Red" Content="NOT CONNECTED"></Label>
+            <Button Content=" CONNECT "></Button>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
+            <Label>Current Robot Mode:</Label>
+            <Label Background="Yellow" Content=" MANUAL "></Label>
+            <Button Content=" CHANGE MODE "></Button>
+        </StackPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Top" Content="FORWARD"></Button>
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Left" Content="LEFT" HorizontalAlignment="Stretch"></Button>
+                <Button DockPanel.Dock="Right" Content="RIGHT" HorizontalAlignment="Stretch"></Button>
+            </DockPanel>
+            
+            <Button DockPanel.Dock="Bottom" Content="BACKWARD"></Button>
+            
+        </DockPanel>
+    </DockPanel>
 </Window>

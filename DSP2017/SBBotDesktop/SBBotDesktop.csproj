@@ -78,6 +78,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\LogData.cs" />
+    <Compile Include="ViewConverters\RobotWifiModeToColorConverter.cs" />
+    <Compile Include="ViewConverters\RobotWiFiModeToStringConverter.cs" />
+    <Compile Include="ViewModels\SetParametersViewModel.cs" />
+    <Compile Include="Views\SetParametersWindow.xaml.cs">
+      <DependentUpon>SetParametersWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,10 +93,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Communication\RobotMode.cs" />
+    <Compile Include="Communication\RobotWiFiMode.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewConverters\ConnectionStateToColorConverter.cs" />
+    <Compile Include="ViewConverters\ConnectionStateToStringConverter.cs" />
+    <Compile Include="ViewHelpers\MarginSetter.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SetParametersWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -118,10 +136,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommunicationService\" />
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\Converters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
