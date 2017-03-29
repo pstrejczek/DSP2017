@@ -10,6 +10,5 @@ C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.assert.pdb
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.assert.xml
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.core.pdb
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.core.xml
-C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.csprojResolveAssemblyReference.cache
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.dll
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.pdb

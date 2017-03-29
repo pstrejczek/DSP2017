@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{820B46B7-FFEF-4269-B764-009508234616}</ProjectGuid>
+    <ProjectGuid>{BB038ECF-45C5-4C8E-8AE7-F9A86D1B39B0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SBBotDesktop</RootNamespace>
     <AssemblyName>SBBotDesktop</AssemblyName>
@@ -121,7 +121,7 @@
   <ItemGroup>
     <Folder Include="CommunicationService\" />
     <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="ViewModels\Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
