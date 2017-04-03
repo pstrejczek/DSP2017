@@ -7,11 +7,12 @@
 ESP8266WebServer webServer(80);
 ESP8266HTTPUpdateServer updateServer;
 
-void WebHandlerClass::init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi)
+void WebHandlerClass::init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi, MovementHandlerClass movement)
 {
 	isInitialized = false;
 	_eeprom = eeprom;
 	_wifi = wifi;
+	_movement = movement;
 
 	initializeWeb();
 }
@@ -43,6 +44,8 @@ void WebHandlerClass::initializeWeb()
 	webServer.on("/getCurrentMode", std::bind(&WebHandlerClass::webHandleCurrentMode, this));
 	webServer.on("/getIp", std::bind(&WebHandlerClass::webHandleGetIp, this));
 	webServer.on("/getCurrentNetwork", std::bind(&WebHandlerClass::webHandleGetIp, this));
+	webServer.on("/getCurrentRobotMode", std::bind(&WebHandlerClass::webHandleCurrentRobotMode, this));
+	webServer.on("/getAvaiableNetworks", std::bind(&WebHandlerClass::webHandleAvaiableNetworks, this));
 	webServer.on("/saveconfig", HTTP_POST, std::bind(&WebHandlerClass::webHandleChangeCredentials, this));
 	webServer.onNotFound(std::bind(&WebHandlerClass::webHandleNotFound, this));
 	// Setup the update server
@@ -154,6 +157,31 @@ void WebHandlerClass::webHandleCurrentMode()
 	if (_wifi.getCurrentWiFiMode() == WFM_ACCESS_POINT) response = "AP";
 	else response = "STA";
 	Serial.println("Sending 200 - current response mode");
+	webServer.send(200, "text/plain", response);
+}
+
+void WebHandlerClass::webHandleCurrentRobotMode()
+{
+	String response;
+
+	if (_movement.getCurrentMode() == MODE_AUTO) response = "AUTOMATIC";
+	else response = "MANUAL";
+	Serial.println("Sending 200 - current robot mode");
+	webServer.send(200, "text/plain", response);
+}
+
+void WebHandlerClass::webHandleAvaiableNetworks()
+{
+	String response;
+
+	int networksCount = _wifi.getAvaiableNetworksCount();
+
+	for(int i = 0; i < networksCount; i++)
+	{
+		response += _wifi.getSsid(i) + "\n";
+	}
+	
+	Serial.println("Sending 200 - avaiable networks");
 	webServer.send(200, "text/plain", response);
 }
 

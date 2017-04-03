@@ -38,6 +38,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reactive.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.3.0.0\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -78,11 +79,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\LogData.cs" />
+    <Compile Include="Communication\Enums\UdpRobotCommand.cs" />
+    <Compile Include="Communication\Enums\CommandResult.cs" />
+    <Compile Include="Communication\UdpCommOperations.cs" />
+    <Compile Include="Communication\WebOperations.cs" />
+    <Compile Include="Communication\ZeroConfOperations.cs" />
+    <Compile Include="Models\LogEntry.cs" />
     <Compile Include="ViewConverters\RobotModeToColorConverter.cs" />
     <Compile Include="ViewConverters\RobotModeToStringConverter.cs" />
     <Compile Include="ViewConverters\RobotWifiModeToColorConverter.cs" />
     <Compile Include="ViewConverters\RobotWiFiModeToStringConverter.cs" />
+    <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SetParametersViewModel.cs" />
     <Compile Include="Views\SetParametersWindow.xaml.cs">
       <DependentUpon>SetParametersWindow.xaml</DependentUpon>
@@ -95,8 +102,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Communication\RobotMode.cs" />
-    <Compile Include="Communication\RobotWiFiMode.cs" />
+    <Compile Include="Communication\Enums\RobotMode.cs" />
+    <Compile Include="Communication\Enums\RobotWiFiMode.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewConverters\ConnectionStateToColorConverter.cs" />
     <Compile Include="ViewConverters\ConnectionStateToStringConverter.cs" />

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SBBotDesktop.Communication.Enums;
+using SBBotDesktop.ViewConverters;
+using System;
 using System.Globalization;
 using System.Windows.Media;
-using SBBotDesktop.Communication;
-using SBBotDesktop.ViewConverters;
 using Xunit;
 
 namespace SBBotDesktopTests.UnitTests.ViewConverters

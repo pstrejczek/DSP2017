@@ -12,3 +12,16 @@ C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.core.pdb
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\xunit.core.xml
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.dll
 C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.pdb
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\SBBotDesktop.exe
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\Zeroconf.dll
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Linq.dll
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Interfaces.dll
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Core.dll
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\SBBotDesktop.pdb
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\SBBotDesktop.exe.config
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\Zeroconf.pdb
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\Zeroconf.xml
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Linq.xml
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Interfaces.xml
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\bin\Release\System.Reactive.Core.xml
+C:\Projects\Dsp2017\DSP2017\SBBotDesktopTests\obj\Release\SBBotDesktopTests.csprojResolveAssemblyReference.cache

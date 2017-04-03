@@ -2,7 +2,7 @@
 
 namespace SBBotDesktop.Models
 {
-    public class LogData
+    public class LogEntry
     {
         public DateTime dateTime { get; set; }
         public string robotEvent { get; set; }

@@ -6,32 +6,46 @@
         xmlns:local="clr-namespace:SBBotDesktop"
         xmlns:viewHelpers="clr-namespace:SBBotDesktop.ViewHelpers"
         xmlns:viewModels="clr-namespace:SBBotDesktop.ViewModels"
+        xmlns:viewConverters="clr-namespace:SBBotDesktop.ViewConverters"
         mc:Ignorable="d"
-        Title="Sandwich Box Bot Desktop" Height="350" Width="525">
+        Title="Sandwich Box Bot Desktop" Height="440" Width="720">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <viewConverters:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
+        <viewConverters:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
+        <viewConverters:RobotModeToColorConverter x:Key="RobotModeToColor"/>
+        <viewConverters:RobotModeToStringConverter x:Key="RobotModeToString" />
+    </Window.Resources>
     <DockPanel>
         <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="Gray" Foreground="White" >SANDWICH BOX BOT</Label>
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
             <Label>Connection State:</Label>
-            <Label Background="Red" Content="NOT CONNECTED"></Label>
-            <Button Content=" CONNECT "></Button>
+            <Label Background="{Binding IsConnected, Converter={StaticResource ConnectionStateToColor}}" Content="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}"></Label>
+            <Button Content=" CONNECT " Command="{Binding CConnect}"></Button>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
             <Label>Current Robot Mode:</Label>
-            <Label Background="Yellow" Content=" MANUAL "></Label>
-            <Button Content=" CHANGE MODE "></Button>
+            <Label Background="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToColor}}" Content="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}"></Label>
+            <Button Content=" CHANGE MODE " Command="{Binding CChangeMode}"></Button>
         </StackPanel>
         <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Top" Content="FORWARD"></Button>
-            <DockPanel DockPanel.Dock="Top">
-                <Button DockPanel.Dock="Left" Content="LEFT" HorizontalAlignment="Stretch"></Button>
-                <Button DockPanel.Dock="Right" Content="RIGHT" HorizontalAlignment="Stretch"></Button>
+            <Button DockPanel.Dock="Top" Content="FORWARD" HorizontalAlignment="Center" Margin="10,10,10,10"></Button>
+            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+                <Button DockPanel.Dock="Left" Content="LEFT" HorizontalAlignment="Right" Margin="10,10,10,10"></Button>
+                <Button DockPanel.Dock="Right" Content="RIGHT" HorizontalAlignment="Left" Margin="10,10,10,10"></Button>
             </DockPanel>
-            
-            <Button DockPanel.Dock="Bottom" Content="BACKWARD"></Button>
-            
+            <Button DockPanel.Dock="Top" Content="BACKWARD" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,10,10,10"></Button>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <DataGrid ItemsSource="{Binding Log}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Time" Binding="{Binding dateTime}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Message" Binding="{Binding robotEvent}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </DockPanel>
     </DockPanel>
 </Window>
+

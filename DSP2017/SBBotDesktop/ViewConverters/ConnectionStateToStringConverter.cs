@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SBBotDesktop.ViewModels.Converters
+namespace SBBotDesktop.ViewConverters
 {
     public class ConnectionStateToStringConverter : IValueConverter
     {

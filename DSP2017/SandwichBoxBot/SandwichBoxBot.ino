@@ -4,24 +4,24 @@
  Author:	Pawe³ Strejczek
 */
 
+#include "MovementHandler.h"
 #include "UdpCommHandler.h"
 #include "WiFiHandler.h"
 #include "WebHandler.h"
 #include "EepromDataHandler.h"
 #include "ProximitySensorHandler.h"
 #include "DriveHandler.h"
+#include "MovementHandler.h"
 
 #define BUZZER 14
 #define LOCAL_UDP_PORT 1234;
 
-enum CurrentMode
-{
-	MODE_MANUAL,
-	MODE_AUTO
-};
+
 
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
+
+MovementHandlerClass Movement;
 
 EepromDataHandlerClass EepromWebConfigHandler;
 WiFiHandlerClass WiFiHandler;
@@ -35,14 +35,14 @@ void setup() {
 
 	Serial.begin(115200);
 	
-	currentMode = MODE_MANUAL;
+	Movement.init();
 	
 	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
 	EepromWebConfigHandler.readEepromWiFiParameters();
 	WiFiHandler.init(EepromWebConfigHandler.getSsid(), EepromWebConfigHandler.getPassword());
 
 	// Initialize WebServer
-	WebHandler.init(EepromWebConfigHandler, WiFiHandler);
+	WebHandler.init(EepromWebConfigHandler, WiFiHandler, Movement);
 		
 	// Initialize UdpCommHandler
 	UdpCommHandler.init(1234);

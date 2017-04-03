@@ -65,7 +65,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="IntegrationTests\Communication\UdpCommOperationsIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\Communication\WebOperationsIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\Communication\ZeroConfOperationsIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\Communication\UdpCommOperationsTests.cs" />
+    <Compile Include="UnitTests\Communication\WebOperationsTests.cs" />
     <Compile Include="UnitTests\ViewConverters\ConnectionStateToColorConverterTests.cs" />
     <Compile Include="UnitTests\ViewConverters\ConnectionStateToStringConverterTests.cs" />
     <Compile Include="UnitTests\ViewConverters\RobotModeToColorConverterTests.cs" />
@@ -76,9 +81,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\SBBotDesktop\SBBotDesktop.csproj">
       <Project>{bb038ecf-45c5-4c8e-8ae7-f9a86d1b39b0}</Project>

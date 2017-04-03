@@ -1,4 +1,4 @@
-﻿using SBBotDesktop.Communication;
+﻿using SBBotDesktop.Communication.Enums;
 using System;
 using System.Globalization;
 using System.Windows.Data;

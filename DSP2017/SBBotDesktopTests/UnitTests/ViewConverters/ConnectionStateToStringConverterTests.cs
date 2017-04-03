@@ -1,6 +1,6 @@
-﻿using SBBotDesktop.ViewModels.Converters;
-using System;
+﻿using System;
 using System.Globalization;
+using SBBotDesktop.ViewConverters;
 using Xunit;
 
 namespace SBBotDesktopTests.UnitTests.ViewConverters

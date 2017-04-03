@@ -1,4 +1,4 @@
-﻿using SBBotDesktop.Communication;
+﻿using SBBotDesktop.Communication.Enums;
 using SBBotDesktop.ViewConverters;
 using System;
 using System.Globalization;

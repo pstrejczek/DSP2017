@@ -36,7 +36,7 @@ class UdpCommHandlerClass
 	 int _localUdpPort;
 	 byte calculateChecksum(unsigned char* packet, int dataLength);
 	 bool isFrameCorrect(unsigned char* packet, int packetLength);
-	 void sendUdpPacket(unsigned char *packet);
+	 void sendUdpPacket(unsigned char *packet, int packetLength);
 	 void sendCommandError();
 	 void confirmCommand(int command);
  protected:

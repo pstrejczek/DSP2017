@@ -19,6 +19,7 @@
 #include<WiFiUdp.h>
 #include "EepromDataHandler.h"
 #include "WiFiHandler.h"
+#include "MovementHandler.h"
 
 class WebHandlerClass
 {
@@ -28,7 +29,8 @@ private:
 
 	EepromDataHandlerClass _eeprom;
 	WiFiHandlerClass _wifi;
-	
+	MovementHandlerClass _movement;
+
 	void initializeWeb();
 	
 	void webHandleRoot();
@@ -36,7 +38,9 @@ private:
 	void webHandleClearEeprom();
 	void webHandleGetIp();
 	void webHandleCurrentMode();
+	void webHandleCurrentRobotMode();
 	void webHandleGetCurrentNetwork();
+	void webHandleAvaiableNetworks();
 	void webHandleNotFound();
 	
 	String getAvaiableNetworks();
@@ -46,7 +50,7 @@ private:
  public:
 	bool isInitialized;
 	bool processRequest();
-	void init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi);
+	void init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi, MovementHandlerClass movement);
 };
 
 extern WebHandlerClass WebHandler;

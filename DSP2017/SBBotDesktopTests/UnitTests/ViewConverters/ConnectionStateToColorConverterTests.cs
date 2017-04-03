@@ -1,7 +1,7 @@
-﻿using SBBotDesktop.ViewModels.Converters;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Media;
+using SBBotDesktop.ViewConverters;
 using Xunit;
 
 namespace SBBotDesktopTests.UnitTests.ViewConverters

@@ -43,10 +43,10 @@ bool UdpCommHandlerClass::isFrameCorrect(unsigned char* packet, int packetLength
 	else return false;
 }
 
-void UdpCommHandlerClass::sendUdpPacket(unsigned char* packet)
+void UdpCommHandlerClass::sendUdpPacket(unsigned char* packet, int packetLength)
 {
 	Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-	Udp.write(packet, sizeof(packet));
+	Udp.write(packet, packetLength);
 	Udp.endPacket();
 }
 
@@ -61,12 +61,12 @@ void UdpCommHandlerClass::sendCommandError()
 	byte checkSum = calculateChecksum(errorResponse, 1);
 	errorResponse[3] = checkSum;
 
-	sendUdpPacket(errorResponse);
+	sendUdpPacket(errorResponse, 4);
 }
 
 void UdpCommHandlerClass::confirmCommand(int command)
 {
-	byte confirmResponse[4];
+	byte confirmResponse[5];
 
 	confirmResponse[0] = 128; //header
 	confirmResponse[1] = 2; //data length
@@ -76,7 +76,7 @@ void UdpCommHandlerClass::confirmCommand(int command)
 	byte checkSum = calculateChecksum(confirmResponse, 2);
 	confirmResponse[4] = checkSum;
 
-	sendUdpPacket(confirmResponse);
+	sendUdpPacket(confirmResponse, 5);
 }
 
 Command UdpCommHandlerClass::processCommandRequest()
