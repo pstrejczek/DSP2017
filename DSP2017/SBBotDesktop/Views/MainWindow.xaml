@@ -1,4 +1,4 @@
-﻿<Window x:Class="SBBotDesktop.MainWindow"
+﻿<controls:MetroWindow x:Class="SBBotDesktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,45 +7,127 @@
         xmlns:viewHelpers="clr-namespace:SBBotDesktop.ViewHelpers"
         xmlns:viewModels="clr-namespace:SBBotDesktop.ViewModels"
         xmlns:viewConverters="clr-namespace:SBBotDesktop.ViewConverters"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="Sandwich Box Bot Desktop" Height="440" Width="720">
+        Title="Sandwich Box Bot Desktop" Height="642" Width="685" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <viewConverters:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
-        <viewConverters:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
-        <viewConverters:RobotModeToColorConverter x:Key="RobotModeToColor"/>
-        <viewConverters:RobotModeToStringConverter x:Key="RobotModeToString" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <viewConverters:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
+            <viewConverters:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
+            <viewConverters:RobotModeToColorConverter x:Key="RobotModeToColor"/>
+            <viewConverters:RobotModeToStringConverter x:Key="RobotModeToString" />
+        </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
-        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="Gray" Foreground="White" >SANDWICH BOX BOT</Label>
+        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="MediumPurple" Foreground="White" >SANDWICH BOX BOT</Label>
+        <GroupBox DockPanel.Dock="Top" Header="CONNECTION SETUP">
+        <DockPanel>
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
-            <Label>Connection State:</Label>
+            <Label>CONNECTION STATE:</Label>
             <Label Background="{Binding IsConnected, Converter={StaticResource ConnectionStateToColor}}" Content="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}"></Label>
             <Button Content=" CONNECT " Command="{Binding CConnect}"></Button>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
-            <Label>Current Robot Mode:</Label>
+        <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" >
+            <Label>CURRENT ROBOT MODE:</Label>
             <Label Background="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToColor}}" Content="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}"></Label>
             <Button Content=" CHANGE MODE " Command="{Binding CChangeMode}"></Button>
         </StackPanel>
-        <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Top" Content="FORWARD" HorizontalAlignment="Center" Margin="10,10,10,10"></Button>
-            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                <Button DockPanel.Dock="Left" Content="LEFT" HorizontalAlignment="Right" Margin="10,10,10,10"></Button>
-                <Button DockPanel.Dock="Right" Content="RIGHT" HorizontalAlignment="Left" Margin="10,10,10,10"></Button>
             </DockPanel>
-            <Button DockPanel.Dock="Top" Content="BACKWARD" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,10,10,10"></Button>
+        </GroupBox>
+        <GroupBox DockPanel.Dock="Top" Header="MANUAL CONTROL">
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Top" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Center" Height="60" Background="Transparent" Width="60" >
+                <Button.Content>
+                    <Rectangle Width="30" Height="35" Fill="MediumPurple">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_arrow_up}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    </Button.Content>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <i:InvokeCommandAction Command="{Binding CForwardStart}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding CForwardStop}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+                    <Button DockPanel.Dock="Left" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" Background="Transparent" Height="60" Width="60" >
+                    <Button.Content>
+                            <Rectangle Width="35" Height="30" Fill="MediumPurple">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Visual="{StaticResource appbar_arrow_left}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button.Content>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding CLeftStart}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding CLeftStop}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button DockPanel.Dock="Right" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Background="Transparent" Height="60" Width="60">
+                    <Button.Content>
+                            <Rectangle Width="35" Height="30" Fill="MediumPurple">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Visual="{StaticResource appbar_arrow_right}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button.Content>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding CRightStart}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding CRightStop}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+            </DockPanel>
+                <Button DockPanel.Dock="Top" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Center" Height="60" Width="60"  Background="Transparent" VerticalAlignment="Top" Margin="5,5,5,5">
+                <Button.Content>
+                        <Rectangle Width="30" Height="35" Fill="MediumPurple">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_arrow_down}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button.Content>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <i:InvokeCommandAction Command="{Binding CBackwardStart}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding CBackwardStop}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
         </DockPanel>
+        </GroupBox>
+        <GroupBox Header="LOG">
         <DockPanel DockPanel.Dock="Bottom">
-            <DataGrid ItemsSource="{Binding Log}">
+            <DataGrid ItemsSource="{Binding Log}" AutoGenerateColumns="False" IsReadOnly="True" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Time" Binding="{Binding dateTime}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Message" Binding="{Binding robotEvent}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+        </GroupBox>
     </DockPanel>
-</Window>
+</controls:MetroWindow>
+
+
 

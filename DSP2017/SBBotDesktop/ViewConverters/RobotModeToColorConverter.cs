@@ -11,7 +11,7 @@ namespace SBBotDesktop.ViewConverters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = (RobotMode)value;
-            return val == RobotMode.Automatic ? Brushes.LimeGreen : Brushes.Yellow;
+            return val == RobotMode.Automatic ? Brushes.LimeGreen : Brushes.Goldenrod;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

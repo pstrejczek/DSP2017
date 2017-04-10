@@ -43,12 +43,13 @@ namespace SBBotDesktop.Communication
 
         public byte[] PrepareCommand(UdpRobotCommand robotCommand)
         {
-            var command = new byte[4];
+            var command = new byte[5];
 
             command[0] = 128;
-            command[1] = 1; //data length
-            command[2] = (byte)robotCommand;
-            command[3] = CalculateChecksum(command, 1);
+            command[1] = 2; //data length
+            command[2] = 1; //set command
+            command[3] = (byte)robotCommand;
+            command[4] = CalculateChecksum(command, 2);
 
             return command;
         }
@@ -64,7 +65,7 @@ namespace SBBotDesktop.Communication
             var response = _client.Receive(ref _remoteEndPoint);
 
             if (!IsPacketCorrect(response)) return CommandResult.Error;
-            if (!IsCommandConfirmed(response, UdpRobotCommand.Auto)) return CommandResult.Error;
+            if (!IsCommandConfirmed(response, robotCommand)) return CommandResult.Error;
 
             return CommandResult.Success;
         }

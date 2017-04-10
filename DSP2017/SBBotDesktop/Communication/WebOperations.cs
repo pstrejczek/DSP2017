@@ -52,7 +52,7 @@ namespace SBBotDesktop.Communication
             }
 
             if (response.Contains("AUTOMATIC")) return RobotMode.Automatic;
-            else if (response.Contains("MANUAL")) return RobotMode.Automatic;
+            else if (response.Contains("MANUAL")) return RobotMode.Manual;
             else return RobotMode.Error;
         }
 
