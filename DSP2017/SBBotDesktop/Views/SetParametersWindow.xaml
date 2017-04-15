@@ -1,16 +1,25 @@
-﻿<Window x:Class="SBBotDesktop.Views.SetParametersWindow"
+﻿<controls:MetroWindow x:Class="SBBotDesktop.Views.SetParametersWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SBBotDesktop.Views"
         xmlns:viewModels="clr-namespace:SBBotDesktop.ViewModels"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:viewHelpers="clr-namespace:SBBotDesktop.ViewHelpers"
         mc:Ignorable="d"
-        Title="SetParametersWindow" Height="300" Width="300">
+        Title="SET NETWORK PARAMETERS" Height="201.482" Width="340.042" WindowStartupLocation="CenterScreen" BorderThickness="2" BorderBrush="White">
     <Window.DataContext>
         <viewModels:SetParametersViewModel/>
     </Window.DataContext>
-    <Grid>
-        
-    </Grid>
-</Window>
+    <DockPanel>
+        <Label DockPanel.Dock="Top" >Please cycle the robot power for the changes to take effect </Label>
+        <Label DockPanel.Dock="Top" ></Label>
+        <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding AvaiableNetworks}" SelectedItem="{Binding SelectedNetwork}"></ComboBox>
+        <PasswordBox Name="NetworkPassword" controls:TextBoxHelper.Watermark="Network password" DockPanel.Dock="Top" viewHelpers:PasswordBoxAssistant.BindPassword="true" viewHelpers:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, 
+                  UpdateSourceTrigger=PropertyChanged}"/>
+        <Button DockPanel.Dock="Top" Content="UPDATE ROBOT CONFIG" Height="27" Command="{Binding CUpdateParameters}"></Button>
+        <Button DockPanel.Dock="Top" Content="CLEAR CONFIG AND SET ROBOT TO AP MODE" Height="27" Command="{Binding CClearEeprom}"></Button>
+        <Button DockPanel.Dock="Top" Content="CANCEL" Height="27" Command="{Binding CCloseWindow}"></Button>
+    </DockPanel>
+</controls:MetroWindow>

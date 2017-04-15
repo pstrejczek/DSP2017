@@ -33,8 +33,9 @@
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">
             <Label>CONNECTION STATE:</Label>
             <Label Background="{Binding IsConnected, Converter={StaticResource ConnectionStateToColor}}" Content="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}"></Label>
-            <Button Content=" CONNECT " Command="{Binding CConnect}"></Button>
-        </StackPanel>
+            <Button Content=" CONNECT " Command="{Binding CConnect}" Height="30"></Button>
+                    <Button Content=" SET NETWORK PARAMETERS " Command="{Binding CSetParameters}" Height="30"></Button>
+         </StackPanel>
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" >
             <Label>CURRENT ROBOT MODE:</Label>
             <Label Background="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToColor}}" Content="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}"></Label>

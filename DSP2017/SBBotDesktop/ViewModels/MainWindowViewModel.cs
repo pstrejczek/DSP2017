@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SBBotDesktop.Communication;
+using SBBotDesktop.DataContainers;
+using SBBotDesktop.Views;
 
 namespace SBBotDesktop.ViewModels
 {
@@ -26,6 +28,7 @@ namespace SBBotDesktop.ViewModels
         private ObservableCollection<LogEntry> _log;
 
         public ICommand CConnect => new RelayCommand(p => this.CConnectExecute(), p => this.ConnectCanExecute());
+        public ICommand CSetParameters => new RelayCommand(p => this.CSetParametersExecute(), p => this.CSetParametersCanExecute());
         public ICommand CChangeMode => new RelayCommand(p => this.CChangeModeExecute(), p => this.ChangeModeCanExecute());
 
         public ICommand CForwardStart => new RelayCommand(p => this.CForwadStartExecute(), p => this.MovementCanExecute());
@@ -37,7 +40,7 @@ namespace SBBotDesktop.ViewModels
         public ICommand CBackwardStart => new RelayCommand(p => this.CBackwardStartExecute(), p => this.MovementCanExecute());
         public ICommand CBackwardStop => new RelayCommand(p => this.CBackwardStopExecute(), p => this.MovementCanExecute());
 
-    
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -113,7 +116,7 @@ namespace SBBotDesktop.ViewModels
             if (!_isConnected) return;
             _isLeft = true;
             var uco = new UdpCommOperations(_robotIp);
-            while(_isLeft)
+            while (_isLeft)
                 await Task.Run(() => uco.SendCommand(UdpRobotCommand.Left));
         }
 
@@ -127,7 +130,7 @@ namespace SBBotDesktop.ViewModels
             if (!_isConnected) return;
             _isRight = true;
             var uco = new UdpCommOperations(_robotIp);
-            while(_isRight)
+            while (_isRight)
                 await Task.Run(() => uco.SendCommand(UdpRobotCommand.Right));
         }
 
@@ -141,7 +144,7 @@ namespace SBBotDesktop.ViewModels
             if (!_isConnected) return;
             _isBackward = true;
             var uco = new UdpCommOperations(_robotIp);
-            while(_isBackward)
+            while (_isBackward)
                 await Task.Run(() => uco.SendCommand(UdpRobotCommand.Backward));
         }
 
@@ -187,6 +190,14 @@ namespace SBBotDesktop.ViewModels
             var zco = new ZeroConfOperations();
             var robotIp = await zco.GetRobotIp();
 
+            if (string.IsNullOrEmpty(robotIp))
+            {
+                AddToLog("Robot not found. Maybe it is in ACCESS POINT mode. Check networks for SANDWICHBOXBOT");
+                return;
+            }
+
+            ConnectionParameters.RobotIp = robotIp;
+
             AddToLog($"Robot found at: {robotIp}");
 
             AddToLog("Checking connection...");
@@ -206,6 +217,28 @@ namespace SBBotDesktop.ViewModels
                 CurrentRobotMode = rmode;
                 AddToLog("Connection succesfull");
             }
+        }
+
+        private async void CSetParametersExecute()
+        {
+            if (string.IsNullOrEmpty(ConnectionParameters.RobotIp))
+            {
+                var zco = new ZeroConfOperations();
+                ConnectionParameters.RobotIp = await zco.GetRobotIp();
+            }
+            if (string.IsNullOrEmpty(ConnectionParameters.RobotIp))
+            {
+                AddToLog("Robot not found. Maybe it is in ACCESS POINT mode. Check networks for SANDWICHBOXBOT");
+                return;
+            }
+
+            var spw = new SetParametersWindow();
+            spw.ShowDialog();
+        }
+
+        private bool CSetParametersCanExecute()
+        {
+            return true;
         }
 
         private bool MovementCanExecute()
