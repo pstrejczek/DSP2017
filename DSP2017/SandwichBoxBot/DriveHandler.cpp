@@ -1,27 +1,9 @@
 #include "DriveHandler.h"
 
-void DriveHandlerClass::manualForward()
+void DriveHandlerClass::manualLeft()
 {
 	analogWrite(DRIVE_AIA, FULLSPEED);
 	analogWrite(DRIVE_AIB, STOP);
-	analogWrite(DRIVE_BIA, FULLSPEED);
-	analogWrite(DRIVE_BIB, STOP);
-	Serial.println("MANUAL FORWARD");
-}
-
-void DriveHandlerClass::manualBackward()
-{
-	analogWrite(DRIVE_AIA, STOP);
-	analogWrite(DRIVE_AIB, FULLSPEED);
-	analogWrite(DRIVE_BIA, STOP);
-	analogWrite(DRIVE_BIB, FULLSPEED);
-	Serial.println("MANUAL BACKWARD");
-}
-
-void DriveHandlerClass::manualLeft()
-{
-	analogWrite(DRIVE_AIA, STOP);
-	analogWrite(DRIVE_AIB, FULLSPEED);
 	analogWrite(DRIVE_BIA, FULLSPEED);
 	analogWrite(DRIVE_BIB, STOP);
 	Serial.println("MANUAL LEFT");
@@ -29,11 +11,29 @@ void DriveHandlerClass::manualLeft()
 
 void DriveHandlerClass::manualRight()
 {
+	analogWrite(DRIVE_AIA, STOP);
+	analogWrite(DRIVE_AIB, FULLSPEED);
+	analogWrite(DRIVE_BIA, STOP);
+	analogWrite(DRIVE_BIB, FULLSPEED);
+	Serial.println("MANUAL RIGHT");
+}
+
+void DriveHandlerClass::manualForward()
+{
+	analogWrite(DRIVE_AIA, STOP);
+	analogWrite(DRIVE_AIB, FULLSPEED);
+	analogWrite(DRIVE_BIA, FULLSPEED);
+	analogWrite(DRIVE_BIB, STOP);
+	Serial.println("MANUAL FORWARD");
+}
+
+void DriveHandlerClass::manualBackward()
+{
 	analogWrite(DRIVE_AIA, FULLSPEED);
 	analogWrite(DRIVE_AIB, STOP);
 	analogWrite(DRIVE_BIA, STOP);
 	analogWrite(DRIVE_BIB, FULLSPEED);
-	Serial.println("MANUAL RIGHT");
+	Serial.println("MANUAL BACKWARD");
 }
 
 DriveHandlerClass::DriveHandlerClass()
@@ -47,10 +47,11 @@ DriveHandlerClass::DriveHandlerClass()
 
 void DriveHandlerClass::stopDrive()
 {
-	analogWrite(DRIVE_AIA, 0);
-	analogWrite(DRIVE_AIB, 0);
-	analogWrite(DRIVE_BIA, 0);
-	analogWrite(DRIVE_BIB, 0);
+	analogWrite(DRIVE_AIA, STOP);
+	analogWrite(DRIVE_AIB, STOP);
+	analogWrite(DRIVE_BIA, STOP);
+	analogWrite(DRIVE_BIB, STOP);
+	Serial.println("STOP");
 }
 
 void DriveHandlerClass::startDrive()
@@ -91,17 +92,14 @@ void DriveHandlerClass::manualSteering(ManualCommand manualCommand)
 		manualBackward();
 		break;
 	case MANUAL_RIGHT:
-			manualRight();
-			break;
+		manualRight();
+		break;
 	case MANUAL_LEFT:
 		manualLeft();
 		break;
 	default:
-		stopDrive();
 		break;
 	}
-	delay(1000);
-	stopDrive();
 }
 
 

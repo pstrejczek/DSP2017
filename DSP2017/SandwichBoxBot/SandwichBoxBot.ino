@@ -31,6 +31,9 @@ UdpCommHandlerClass UdpCommHandler;
 ProximityState proximityState;
 CurrentMode currentMode;
 
+Command currentManualCommand = C_NONE;
+int test = 0;
+
 void setup() {
 
 	Serial.begin(115200);
@@ -52,40 +55,40 @@ void setup() {
 	proximityState = NONE;
 }
 
-void loop() 
+void loop()
 {
-	Command currentCommand = C_NONE;
 	// Web and OTA
 	if (WebHandler.isInitialized)
 	{
-		// Process web requests
 		WebHandler.processRequest();
 	}
-	
+
 	// UDP Command Server
+	
 	if (UdpCommHandler.isInitialized)
 	{
-		currentCommand = UdpCommHandler.processCommandRequest();
-		if (currentCommand == C_PACKET_ERROR) Serial.println("UDP packet data error");
+		currentManualCommand = UdpCommHandler.processCommandRequest();
+		if (currentManualCommand == C_PACKET_ERROR) Serial.println("UDP packet data error");
 	}
 
 	// Process Command
-	switch(currentCommand)
+	switch(currentManualCommand)
 	{
-	case C_AUTO: currentMode = MODE_AUTO; Serial.println("SET MODE AUTO"); break;
-	case C_MANUAL: currentMode = MODE_MANUAL; Serial.println("SET MODE MANUAL"); break;
+	case C_AUTO: currentMode = MODE_AUTO; Movement.SetCurrentMode(MODE_AUTO); break;
+	case C_MANUAL: currentMode = MODE_MANUAL; Movement.SetCurrentMode(MODE_MANUAL); break;
 	case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
 	case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
 	case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
 	case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
+	case C_STOP: Drive.stopDrive(); break;
 	default: break;
 	}
 	
 	// Robot logic
-	robotLogic();
+	if(Movement.getCurrentMode() == MODE_AUTO) automaticRobotLogic();
 }
 
-void robotLogic()
+void automaticRobotLogic()
 {
 	proximityState = ProximitySensors.checkState();
 
@@ -93,16 +96,18 @@ void robotLogic()
 	{
 		digitalWrite(BUZZER, HIGH);
 		Drive.stopDrive();
-
-		//delay(2000);
-
+		delay(500);
 		digitalWrite(BUZZER, LOW);
-		Drive.reverseDirection();
+		Drive.manualSteering(MANUAL_BACKWARD);
+		delay(500);
+		Drive.manualSteering(MANUAL_RIGHT);
+		delay(500);
+		Drive.stopDrive();
 	}
 	else
 	{
 		digitalWrite(BUZZER, LOW);
-		Drive.startDrive();
+		Drive.manualSteering(MANUAL_FORWARD);
 	}
 }
 

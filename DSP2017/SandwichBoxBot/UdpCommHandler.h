@@ -27,7 +27,8 @@ typedef enum Command
 	C_FORWARD,
 	C_BACKWARD,
 	C_LEFT,
-	C_RIGHT
+	C_RIGHT,
+	C_STOP
 };
 
 class UdpCommHandlerClass

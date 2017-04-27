@@ -14,6 +14,11 @@ CurrentMode MovementHandlerClass::getCurrentMode()
 	return _currentMovementMode;
 }
 
+void MovementHandlerClass::SetCurrentMode(CurrentMode mode)
+{
+	_currentMovementMode = mode;
+}
+
 
 MovementHandlerClass MovementHandler;
 

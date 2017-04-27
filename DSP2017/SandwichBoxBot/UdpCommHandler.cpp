@@ -82,13 +82,19 @@ void UdpCommHandlerClass::confirmCommand(int command)
 Command UdpCommHandlerClass::processCommandRequest()
 {
 	int packetSize = Udp.parsePacket();
-	if (packetSize == 0) return C_NONE;
+	if (packetSize == 0)
+	{
+		return C_NONE;
+	}
 
 	int commandLength = Udp.readBytes(incomingPacket, 32);
+	Udp.flush();
+	
 	if (!isFrameCorrect(incomingPacket, commandLength))
 	{
 		sendCommandError();
 		return C_PACKET_ERROR;
+		
 	}
 	int commandFunction = incomingPacket[2];
 	
@@ -101,7 +107,7 @@ Command UdpCommHandlerClass::processCommandRequest()
 	int command = incomingPacket[3];
 
 	confirmCommand(command);
-
+	
 	switch(command)
 	{
 		case 1: return C_AUTO;
@@ -110,6 +116,7 @@ Command UdpCommHandlerClass::processCommandRequest()
 		case 4: return C_BACKWARD;
 		case 5: return C_LEFT;
 		case 6: return C_RIGHT;
+		case 7: return C_STOP;
 		default: return C_PACKET_ERROR;
 	}
 }

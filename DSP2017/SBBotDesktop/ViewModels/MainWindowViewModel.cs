@@ -26,6 +26,7 @@ namespace SBBotDesktop.ViewModels
         private bool _isBackward = false;
 
         private ObservableCollection<LogEntry> _log;
+        private UdpCommOperations _udpCommOps;
 
         public ICommand CConnect => new RelayCommand(p => this.CConnectExecute(), p => this.ConnectCanExecute());
         public ICommand CSetParameters => new RelayCommand(p => this.CSetParametersExecute(), p => this.CSetParametersCanExecute());
@@ -39,8 +40,6 @@ namespace SBBotDesktop.ViewModels
         public ICommand CRightStop => new RelayCommand(p => this.CRightStopExecute(), p => this.MovementCanExecute());
         public ICommand CBackwardStart => new RelayCommand(p => this.CBackwardStartExecute(), p => this.MovementCanExecute());
         public ICommand CBackwardStop => new RelayCommand(p => this.CBackwardStopExecute(), p => this.MovementCanExecute());
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -96,61 +95,57 @@ namespace SBBotDesktop.ViewModels
             Log.Add(le);
         }
 
-        private async void CForwadStartExecute()
+        private void CForwadStartExecute()
         {
             if (!_isConnected) return;
-            _isForward = true;
-            var uco = new UdpCommOperations(_robotIp);
-            while (_isForward)
-                await Task.Run(() => uco.SendCommand(UdpRobotCommand.Forward));
+            _udpCommOps.SendCommand(UdpRobotCommand.Forward);
         }
 
         private void CForwadStopExecute()
         {
-            _isForward = false;
+            StopMovement();
         }
 
 
-        private async void CLeftStartExecute()
+        private void CLeftStartExecute()
         {
             if (!_isConnected) return;
-            _isLeft = true;
-            var uco = new UdpCommOperations(_robotIp);
-            while (_isLeft)
-                await Task.Run(() => uco.SendCommand(UdpRobotCommand.Left));
+            _udpCommOps.SendCommand(UdpRobotCommand.Left);
         }
 
         private void CLeftStopExecute()
         {
-            _isLeft = false;
+            StopMovement();
         }
 
-        private async void CRightStartExecute()
+        private void CRightStartExecute()
         {
             if (!_isConnected) return;
-            _isRight = true;
-            var uco = new UdpCommOperations(_robotIp);
-            while (_isRight)
-                await Task.Run(() => uco.SendCommand(UdpRobotCommand.Right));
+            _udpCommOps.SendCommand(UdpRobotCommand.Right);
         }
 
         private void CRightStopExecute()
         {
             _isRight = false;
+            StopMovement();
         }
 
-        private async void CBackwardStartExecute()
+        private void CBackwardStartExecute()
         {
             if (!_isConnected) return;
-            _isBackward = true;
-            var uco = new UdpCommOperations(_robotIp);
-            while (_isBackward)
-                await Task.Run(() => uco.SendCommand(UdpRobotCommand.Backward));
+            _udpCommOps.SendCommand(UdpRobotCommand.Backward);
+        }
+
+        private void StopMovement()
+        {
+            if (!_isConnected) return;
+            _udpCommOps.SendCommand(UdpRobotCommand.Stop);
         }
 
         private void CBackwardStopExecute()
         {
             _isBackward = false;
+            StopMovement();
         }
 
         private void CConnectExecute()
@@ -167,16 +162,15 @@ namespace SBBotDesktop.ViewModels
         {
             if (!_isConnected) return;
 
-            var uco = new UdpCommOperations(_robotIp);
             if (CurrentRobotMode == RobotMode.Automatic)
             {
                 AddToLog("Switching mode to MANUAL");
-                uco.SendCommand(UdpRobotCommand.Manual);
+                _udpCommOps.SendCommand(UdpRobotCommand.Manual);
             }
             if (CurrentRobotMode == RobotMode.Manual)
             {
                 AddToLog("Switching mode to AUTO");
-                uco.SendCommand(UdpRobotCommand.Auto);
+                _udpCommOps.SendCommand(UdpRobotCommand.Auto);
             }
 
             var wo = new WebOperations(_robotIp);
@@ -215,6 +209,7 @@ namespace SBBotDesktop.ViewModels
             {
                 IsConnected = true;
                 CurrentRobotMode = rmode;
+                _udpCommOps = new UdpCommOperations(robotIp);
                 AddToLog("Connection succesfull");
             }
         }

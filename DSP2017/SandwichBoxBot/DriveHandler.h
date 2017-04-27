@@ -15,6 +15,7 @@
 #define DRIVE_BIB 4
 
 #define FULLSPEED 1023
+#define HALFSPEED 512
 #define STOP 0
 
 typedef enum DriveDirection {

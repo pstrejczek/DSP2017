@@ -26,8 +26,15 @@
             <viewConverters:RobotModeToStringConverter x:Key="RobotModeToString" />
         </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Up" Command="{Binding CForwardStart}"/>
+        <KeyBinding Key="Down" Command="{Binding CBackwardStart}"/>
+        <KeyBinding Key="Left" Command="{Binding CLeftStart}"/>
+        <KeyBinding Key="Right" Command="{Binding CRightStart}"/>
+        <KeyBinding Key="S" Command="{Binding CForwardStop}"/>
+    </Window.InputBindings>
     <DockPanel>
-        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="MediumPurple" Foreground="White" >SANDWICH BOX BOT</Label>
+        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="32" FontWeight="ExtraBold" Background="MediumPurple" Foreground="White">SANDWICH BOX BOT</Label>
         <GroupBox DockPanel.Dock="Top" Header="CONNECTION SETUP">
         <DockPanel>
         <StackPanel DockPanel.Dock="Top" viewHelpers:MarginSetter.Margin="5"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,5,5,5">

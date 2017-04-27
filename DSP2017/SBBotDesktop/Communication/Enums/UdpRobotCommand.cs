@@ -7,6 +7,7 @@
         Forward = 3,
         Backward = 4,
         Left = 5,
-        Right = 6
+        Right = 6,
+        Stop = 7
     }
 }

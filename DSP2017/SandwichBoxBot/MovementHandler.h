@@ -25,6 +25,7 @@ private:
  public:
 	void init();
 	CurrentMode getCurrentMode();
+	void SetCurrentMode(CurrentMode mode);
 };
 
 extern MovementHandlerClass MovementHandler;

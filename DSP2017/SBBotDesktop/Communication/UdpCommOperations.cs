@@ -15,6 +15,7 @@ namespace SBBotDesktop.Communication
         {
             _remoteEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), Port);
             _client = new UdpClient();
+            Connect();
         }
 
         public bool Connect()
@@ -56,7 +57,7 @@ namespace SBBotDesktop.Communication
 
         public CommandResult SendCommand(UdpRobotCommand robotCommand)
         {
-            if (!Connect()) return CommandResult.Error;
+            if (!IsConnected()) Connect();
 
             var command = PrepareCommand(robotCommand);
 
