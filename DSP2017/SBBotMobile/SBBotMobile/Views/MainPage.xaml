@@ -5,66 +5,87 @@
 			 xmlns:viewConverters1="clr-namespace:SBBotMobile.ViewConverters;assembly=SBBotMobile"
 			 xmlns:mvvm="clr-namespace:SBBotMobile;assembly=SBBotMobile"
 			 x:Class="SBBotMobile.Views.MainPage" 
-			 BindingContext="{Binding Source={x:Static mvvm:App.Locator}, Path=Main}"
-             BackgroundColor="Black">
+			 BindingContext="{Binding Source={x:Static mvvm:App.Locator}, Path=Main}" 
+             BackgroundColor="DimGray">
 	<ContentPage.Resources>
-        <ResourceDictionary>
-            <viewConverters1:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
-		    <viewConverters1:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
-            <viewConverters1:RobotModeToColorConverter x:Key="RobotModeToColor"/>
-            <viewConverters1:RobotModeToStringConverter x:Key="RobotModeToString" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    <StackLayout VerticalOptions="Fill">
-		<Label Text="SANDWICH BOX BOT" 
-			   Margin="5,10,5,0"
+		<ResourceDictionary>
+			<viewConverters1:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
+			<viewConverters1:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
+			<viewConverters1:RobotModeToColorConverter x:Key="RobotModeToColor"/>
+			<viewConverters1:RobotModeToStringConverter x:Key="RobotModeToString" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="30*" />
+        </Grid.RowDefinitions>
+    
+		<Label Grid.Row="0" Text="SANDWICH BOX BOT" 
+			   Margin="0,5,0,0"
 			   FontSize="30"
 			   BackgroundColor="DarkGray"
 			   VerticalOptions="Center" 
 			   HorizontalTextAlignment="Center"
 			   HorizontalOptions="FillAndExpand" />
-		<Frame OutlineColor="Silver" VerticalOptions="Start" HorizontalOptions="Center">
-        <StackLayout>
-        <StackLayout Orientation="Horizontal" VerticalOptions="Start">
-                <Label Text="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}" 
+		<Frame Grid.Row="1" OutlineColor="Silver" VerticalOptions="Start" HorizontalOptions="FillAndExpand" BackgroundColor="Gray">
+		<StackLayout>
+		<StackLayout Orientation="Horizontal" VerticalOptions="Start">
+				<Label Text="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}" 
 				   BackgroundColor="{Binding IsConnected, Converter={StaticResource ConnectionStateToColor}}"
-				   HorizontalOptions="CenterAndExpand" 
-                   Margin="10,0,0,0"
-                   VerticalTextAlignment="Center"/>
-			<Button Text="CONNECT" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0" />
+				   HorizontalOptions="FillAndExpand" 
+				   VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"/>
+            
+			<Button Text="CONNECT" HorizontalOptions="FillAndExpand" Command="{Binding CConnect}" Margin="0,0,10,0" />
 		</StackLayout>   
-        <StackLayout>
-            <Button Text="NETWORK SETTINGS" HorizontalOptions="CenterAndExpand"/>
-        </StackLayout>
-                <StackLayout Orientation="Horizontal" VerticalOptions="Start">
-                    <Label Text="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}" 
+		<StackLayout>
+			<Button Text="NETWORK SETTINGS" HorizontalOptions="FillAndExpand" Command="{Binding CSetParameters}"/>
+		</StackLayout>
+				<StackLayout Orientation="Horizontal" VerticalOptions="Start">
+					<Label Text="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}" 
 				   BackgroundColor="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToColor}}"
-				   HorizontalOptions="CenterAndExpand" 
-                   Margin="10,0,0,0"
-                   VerticalTextAlignment="Center"/>
-                    <Button Text="CHANGE MODE" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0" />
-                </StackLayout>
-            </StackLayout>
-        </Frame>
-        <Frame OutlineColor="Silver" HorizontalOptions="Center">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="33*" />
-                    <ColumnDefinition Width="33*" />
-                    <ColumnDefinition Width="33*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="33*" />
-                    <RowDefinition Height="33*" />
-                    <RowDefinition Height="33*" />
-                </Grid.RowDefinitions>
+				   HorizontalOptions="FillAndExpand" 
+				   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"/>
+					<Button Text="CHANGE MODE" HorizontalOptions="FillAndExpand" Command="{Binding CChangeMode}" Margin="0,0,10,0" />
+				</StackLayout>
+			</StackLayout>
+		</Frame>
+		<Frame Grid.Row="2" OutlineColor="Silver" HorizontalOptions="FillAndExpand" BackgroundColor="Gray">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="33*" />
+					<ColumnDefinition Width="33*" />
+					<ColumnDefinition Width="33*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="33*" />
+					<RowDefinition Height="33*" />
+					<RowDefinition Height="33*" />
+				</Grid.RowDefinitions>
 
-                <Button Grid.Column="1" Grid.Row="0" Text="PRZÓD"></Button>
-                <Button Grid.Column="0" Grid.Row="1" Text="LEWO"></Button>
-                <Button Grid.Column="2" Grid.Row="1" Text="PRAWO"></Button>
-                <Button Grid.Column="1" Grid.Row="2" Text="TYŁ"></Button>
-            </Grid>
+				<Button Grid.Column="1" Grid.Row="0" Text="FORWARD" Command="{Binding CForward}"></Button>
+				<Button Grid.Column="0" Grid.Row="1" Text="LEFT" Command="{Binding CLeft}"></Button>
+				<Button Grid.Column="2" Grid.Row="1" Text="RIGHT" Command="{Binding CRight}"></Button>
+				<Button Grid.Column="1" Grid.Row="2" Text="BACKWARD" Command="{Binding CBackward}"></Button>
+			</Grid>
+		</Frame>
+        <Frame Grid.Row="3" HorizontalOptions="EndAndExpand" BackgroundColor="Gray">
+            <ListView HorizontalOptions="FillAndExpand" ItemsSource="{Binding Log}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" HorizontalOptions="StartAndExpand"></Label>
+                                <Label Text="{Binding RobotEvent}" HorizontalOptions="EndAndExpand"></Label>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Frame>
-    </StackLayout>
-
+    </Grid>
 </ContentPage>
