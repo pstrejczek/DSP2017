@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:system="clr-namespace:System;assembly=System.Runtime"
+			 xmlns:viewConverters1="clr-namespace:SBBotMobile.ViewConverters;assembly=SBBotMobile"
+			 xmlns:mvvm="clr-namespace:SBBotMobile;assembly=SBBotMobile"
+			 x:Class="SBBotMobile.Views.MainPage" 
+			 BindingContext="{Binding Source={x:Static mvvm:App.Locator}, Path=Main}"
+             BackgroundColor="Black">
+	<ContentPage.Resources>
+        <ResourceDictionary>
+            <viewConverters1:ConnectionStateToColorConverter x:Key="ConnectionStateToColor"/>
+		    <viewConverters1:ConnectionStateToStringConverter x:Key="ConnectionStateToString" />
+            <viewConverters1:RobotModeToColorConverter x:Key="RobotModeToColor"/>
+            <viewConverters1:RobotModeToStringConverter x:Key="RobotModeToString" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout VerticalOptions="Fill">
+		<Label Text="SANDWICH BOX BOT" 
+			   Margin="5,10,5,0"
+			   FontSize="30"
+			   BackgroundColor="DarkGray"
+			   VerticalOptions="Center" 
+			   HorizontalTextAlignment="Center"
+			   HorizontalOptions="FillAndExpand" />
+		<Frame OutlineColor="Silver" VerticalOptions="Start" HorizontalOptions="Center">
+        <StackLayout>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                <Label Text="{Binding IsConnected, Converter={StaticResource ConnectionStateToString}}" 
+				   BackgroundColor="{Binding IsConnected, Converter={StaticResource ConnectionStateToColor}}"
+				   HorizontalOptions="CenterAndExpand" 
+                   Margin="10,0,0,0"
+                   VerticalTextAlignment="Center"/>
+			<Button Text="CONNECT" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0" />
+		</StackLayout>   
+        <StackLayout>
+            <Button Text="NETWORK SETTINGS" HorizontalOptions="CenterAndExpand"/>
+        </StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                    <Label Text="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToString}}" 
+				   BackgroundColor="{Binding CurrentRobotMode, Converter={StaticResource RobotModeToColor}}"
+				   HorizontalOptions="CenterAndExpand" 
+                   Margin="10,0,0,0"
+                   VerticalTextAlignment="Center"/>
+                    <Button Text="CHANGE MODE" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0" />
+                </StackLayout>
+            </StackLayout>
+        </Frame>
+        <Frame OutlineColor="Silver" HorizontalOptions="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="33*" />
+                    <ColumnDefinition Width="33*" />
+                    <ColumnDefinition Width="33*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="33*" />
+                    <RowDefinition Height="33*" />
+                    <RowDefinition Height="33*" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Column="1" Grid.Row="0" Text="PRZÓD"></Button>
+                <Button Grid.Column="0" Grid.Row="1" Text="LEWO"></Button>
+                <Button Grid.Column="2" Grid.Row="1" Text="PRAWO"></Button>
+                <Button Grid.Column="1" Grid.Row="2" Text="TYŁ"></Button>
+            </Grid>
+        </Frame>
+    </StackLayout>
+
+</ContentPage>

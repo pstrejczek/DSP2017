@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using SBBotMobile.ViewModel;
 using Xamarin.Forms;
 
 namespace SBBotMobile
@@ -13,7 +9,13 @@ namespace SBBotMobile
         {
             InitializeComponent();
 
-            MainPage = new SBBotMobile.MainPage();
+            MainPage = new Views.MainPage();
+        }
+
+        private static readonly ViewModelLocator _locator = new ViewModelLocator();
+        public static ViewModelLocator Locator
+        {
+            get { return _locator; }
         }
 
         protected override void OnStart()

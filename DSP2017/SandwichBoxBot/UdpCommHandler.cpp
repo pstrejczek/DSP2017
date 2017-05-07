@@ -94,7 +94,6 @@ Command UdpCommHandlerClass::processCommandRequest()
 	{
 		sendCommandError();
 		return C_PACKET_ERROR;
-		
 	}
 	int commandFunction = incomingPacket[2];
 	
