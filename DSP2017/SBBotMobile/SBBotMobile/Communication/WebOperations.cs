@@ -7,18 +7,18 @@ using SBBotMobile.Communication.Enums;
 
 namespace SBBotMobile.Communication
 {
-    class WebOperations
+    public static class WebOperations
     {
-        private readonly string _robotIp;
-        private readonly HttpClient _httpClient;
+        private static string _robotIp;
+        private static HttpClient _httpClient;
 
-        public WebOperations(string robotIp)
+        public static void Initialize(string robotIp)
         {
             _robotIp = robotIp;
             _httpClient = new HttpClient();
         }
 
-        public async Task<RobotWiFiMode> GetCurrentWiFiMode()
+        public static async Task<RobotWiFiMode> GetCurrentWiFiMode()
         {
             var response = await _httpClient.GetStringAsync(PrepareWebAddress("getCurrentMode"));
 
@@ -27,7 +27,7 @@ namespace SBBotMobile.Communication
             else return RobotWiFiMode.Error;
         }
 
-        public async Task<RobotMode> GetCurrentRobotMode()
+        public static async Task<RobotMode> GetCurrentRobotMode()
         {
             var response = await _httpClient.GetStringAsync(PrepareWebAddress("getCurrentRobotMode"));
 
@@ -36,7 +36,7 @@ namespace SBBotMobile.Communication
             else return RobotMode.Error;
         }
 
-        public string PrepareWebAddress(string parameter)
+        public static string PrepareWebAddress(string parameter)
         {
             var webAddress = new StringBuilder();
             webAddress.Append("http://");
@@ -47,7 +47,7 @@ namespace SBBotMobile.Communication
             return webAddress.ToString();
         }
 
-        public async Task<List<string>> GetAvaiableNetworks()
+        public static async Task<List<string>> GetAvaiableNetworks()
         {
             var response = new List<string>();
 
@@ -64,14 +64,14 @@ namespace SBBotMobile.Communication
             return response;
         }
 
-        public async Task<CommandResult> ClearEeprom()
+        public static async Task<CommandResult> ClearEeprom()
         {
             var response = await _httpClient.GetStringAsync(PrepareWebAddress("cleareeprom"));
 
             return response.Contains("ERROR") ? CommandResult.Error : CommandResult.Success;
         }
 
-        public async Task<CommandResult> SetNetworkCredentials(string networkSsid, string password)
+        public static async Task<CommandResult> SetNetworkCredentials(string networkSsid, string password)
         {
             var values = new List<KeyValuePair<string, string>>
             {

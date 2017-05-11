@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:mvvm="clr-namespace:SBBotMobile;assembly=SBBotMobile"
+			 x:Class="SBBotMobile.Views.SetParametersPage"
+			 BindingContext="{Binding Source={x:Static mvvm:App.Locator}, Path=SetParameters}" 
+			 BackgroundColor="DimGray">
+ <StackLayout Orientation="Vertical">
+		<Label Text="NETWORK SETTINGS" 
+			   Margin="0,5,0,0"
+			   FontSize="30"
+			   BackgroundColor="DarkGray"
+			   VerticalOptions="Center" 
+			   HorizontalTextAlignment="Center"
+			   HorizontalOptions="FillAndExpand" />
+	 <Label VerticalOptions="Center" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Text="Please cycle the power on the robot after changes" />
+	 <Label VerticalOptions="Center" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Text="and reconnect" />
+        <Picker Title="Select Network" ItemsSource="{Binding AvaiableNetworks}" SelectedItem="{Binding SelectedNetwork}" IsEnabled="{Binding Loaded}">
+			
+		</Picker>
+        <Entry Placeholder="Network Password" IsPassword="True" Text="{Binding Password}"></Entry>
+        <Button Text="UPDATE ROBOT CONFIG" Command="{Binding CUpdateParameters}" IsEnabled="{Binding Loaded}"></Button>
+        <Button Text="CLEAR CONFIG AND SET ROBOT TO AP MODE" Command="{Binding CClearEeprom}"></Button>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" />
+        <Button Text="BACK" VerticalOptions="EndAndExpand" Clicked="Button_OnClicked"></Button>
+</StackLayout>   
+	
+</ContentPage>

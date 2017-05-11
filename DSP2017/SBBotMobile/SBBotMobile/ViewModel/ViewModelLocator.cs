@@ -43,6 +43,7 @@ namespace SBBotMobile.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<SetParametersViewModel>();
         }
 
         public MainViewModel Main
@@ -52,7 +53,12 @@ namespace SBBotMobile.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-        
+
+        public SetParametersViewModel SetParameters
+        {
+            get { return ServiceLocator.Current.GetInstance<SetParametersViewModel>(); }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

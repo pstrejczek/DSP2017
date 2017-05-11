@@ -6,6 +6,7 @@ using SBBotMobile.Communication;
 using SBBotMobile.Models;
 using SBBotMobile.DataContainers;
 using GalaSoft.MvvmLight.Command;
+using Xamarin.Forms;
 
 namespace SBBotMobile.ViewModel
 {
@@ -19,7 +20,6 @@ namespace SBBotMobile.ViewModel
         private string _robotIp;
 
         public ICommand CConnect => new RelayCommand(ConnectRobot);
-        public ICommand CSetParameters => new RelayCommand(SetConnectionParameters);
         public ICommand CChangeMode => new RelayCommand(ChangeRobotMode);
         public ICommand CForward => new RelayCommand(ManualForward);
         public ICommand CBackward => new RelayCommand(ManualBackward);
@@ -60,11 +60,11 @@ namespace SBBotMobile.ViewModel
         {
             _isConnected = false;
             _currentRobotMode = RobotMode.Manual;
-        }
 
-        private void SetConnectionParameters()
-        {
-
+            MessagingCenter.Subscribe<SetParametersViewModel>(this, "disconnect", (Disconect) =>
+            {
+                IsConnected = false;
+            });
         }
 
         private void ManualForward()
@@ -118,8 +118,9 @@ namespace SBBotMobile.ViewModel
 
             _robotIp = robotIp;
 
-            var wo = new WebOperations(robotIp);
-            var rmode = await wo.GetCurrentRobotMode();
+            WebOperations.Initialize(_robotIp);
+
+            var rmode = await WebOperations.GetCurrentRobotMode();
 
             if (rmode == RobotMode.Error)
             {
@@ -149,8 +150,7 @@ namespace SBBotMobile.ViewModel
                 _udpCommOps.SendCommand(UdpRobotCommand.Auto);
             }
 
-            var wo = new WebOperations(_robotIp);
-            CurrentRobotMode = await wo.GetCurrentRobotMode();
+            CurrentRobotMode = await WebOperations.GetCurrentRobotMode();
         }
 
         public void AddToLog(string message)
