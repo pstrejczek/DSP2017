@@ -15,14 +15,14 @@
 			   HorizontalOptions="FillAndExpand" />
 	 <Label VerticalOptions="Center" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Text="Please cycle the power on the robot after changes" />
 	 <Label VerticalOptions="Center" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Text="and reconnect" />
-        <Picker Title="Select Network" ItemsSource="{Binding AvaiableNetworks}" SelectedItem="{Binding SelectedNetwork}" IsEnabled="{Binding Loaded}">
+		<Picker Title="Select Network" ItemsSource="{Binding AvaiableNetworks}" SelectedItem="{Binding SelectedNetwork}" IsEnabled="{Binding Loaded}">
 			
 		</Picker>
-        <Entry Placeholder="Network Password" IsPassword="True" Text="{Binding Password}"></Entry>
-        <Button Text="UPDATE ROBOT CONFIG" Command="{Binding CUpdateParameters}" IsEnabled="{Binding Loaded}"></Button>
-        <Button Text="CLEAR CONFIG AND SET ROBOT TO AP MODE" Command="{Binding CClearEeprom}"></Button>
-        <ActivityIndicator IsRunning="{Binding IsLoading}" />
-        <Button Text="BACK" VerticalOptions="EndAndExpand" Clicked="Button_OnClicked"></Button>
+		<Entry Placeholder="Network Password" IsPassword="True" Text="{Binding Password}"></Entry>
+		<Button Text="UPDATE ROBOT CONFIG" Command="{Binding CUpdateParameters}" IsEnabled="{Binding Loaded}"></Button>
+		<Button Text="CLEAR CONFIG AND SET ROBOT TO AP MODE" Command="{Binding CClearEeprom}"></Button>
+		<ActivityIndicator IsRunning="{Binding IsLoading}" />
+		<Button Text="BACK" VerticalOptions="EndAndExpand" Clicked="Button_OnClicked"></Button>
 </StackLayout>   
 	
 </ContentPage>

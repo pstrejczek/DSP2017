@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Threading;
 using SBBotMobile.Communication.Enums;
 using SBBotMobile.Communication;
 using SBBotMobile.Models;
@@ -139,6 +140,8 @@ namespace SBBotMobile.ViewModel
         {
             if (!_isConnected) return;
 
+            var lastRobotMode = CurrentRobotMode;
+
             if (CurrentRobotMode == RobotMode.Automatic)
             {
                 AddToLog("Switching mode to MANUAL");
@@ -150,7 +153,15 @@ namespace SBBotMobile.ViewModel
                 _udpCommOps.SendCommand(UdpRobotCommand.Auto);
             }
 
-            CurrentRobotMode = await WebOperations.GetCurrentRobotMode();
+            // wait for state change
+
+            var counter = 0;
+
+            while (CurrentRobotMode == lastRobotMode && counter < 10)
+            {
+                CurrentRobotMode = await WebOperations.GetCurrentRobotMode();
+                counter++;
+            }
         }
 
         public void AddToLog(string message)

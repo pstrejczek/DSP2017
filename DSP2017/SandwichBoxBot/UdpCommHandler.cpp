@@ -5,7 +5,7 @@
 #include "UdpCommHandler.h"
 
 WiFiUDP Udp;
-byte incomingPacket[32];
+byte incomingPacket[UDP_TX_PACKET_MAX_SIZE];
 
 
 void UdpCommHandlerClass::init(int localPort)
@@ -82,19 +82,21 @@ void UdpCommHandlerClass::confirmCommand(int command)
 Command UdpCommHandlerClass::processCommandRequest()
 {
 	int packetSize = Udp.parsePacket();
+	
 	if (packetSize == 0)
 	{
 		return C_NONE;
 	}
 
-	int commandLength = Udp.readBytes(incomingPacket, 32);
-	Udp.flush();
+	int commandLength = Udp.read(incomingPacket, UDP_TX_PACKET_MAX_SIZE);
+	//Udp.flush();
 	
 	if (!isFrameCorrect(incomingPacket, commandLength))
 	{
 		sendCommandError();
 		return C_PACKET_ERROR;
 	}
+
 	int commandFunction = incomingPacket[2];
 	
 	if (commandFunction != CF_SET) // 

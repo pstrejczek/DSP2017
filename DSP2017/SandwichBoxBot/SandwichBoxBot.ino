@@ -11,11 +11,9 @@
 #include "EepromDataHandler.h"
 #include "ProximitySensorHandler.h"
 #include "DriveHandler.h"
-#include "MovementHandler.h"
 
 #define BUZZER 14
 #define LOCAL_UDP_PORT 1234;
-
 
 
 DriveHandlerClass Drive;
@@ -74,14 +72,14 @@ void loop()
 	// Process Command
 	switch(currentManualCommand)
 	{
-	case C_AUTO: currentMode = MODE_AUTO; Movement.SetCurrentMode(MODE_AUTO); break;
-	case C_MANUAL: currentMode = MODE_MANUAL; Movement.SetCurrentMode(MODE_MANUAL); break;
-	case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
-	case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
-	case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
-	case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
-	case C_STOP: Drive.stopDrive(); break;
-	default: break;
+		case C_AUTO: currentMode = MODE_AUTO; Movement.SetCurrentMode(MODE_AUTO); break;
+		case C_MANUAL: currentMode = MODE_MANUAL; Movement.SetCurrentMode(MODE_MANUAL); break;
+		case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
+		case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
+		case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
+		case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
+		case C_STOP: Drive.stopDrive(); break;
+		default: break;
 	}
 	
 	// Robot logic
@@ -92,7 +90,7 @@ void automaticRobotLogic()
 {
 	proximityState = ProximitySensors.checkState();
 
-	if (proximityState == BOTH || proximityState == LEFT || proximityState == RIGHT)
+	if (proximityState == BOTH || proximityState == LEFT)
 	{
 		digitalWrite(BUZZER, HIGH);
 		Drive.stopDrive();
@@ -101,6 +99,18 @@ void automaticRobotLogic()
 		Drive.manualSteering(MANUAL_BACKWARD);
 		delay(500);
 		Drive.manualSteering(MANUAL_RIGHT);
+		delay(500);
+		Drive.stopDrive();
+	}
+	else if (proximityState == RIGHT)
+	{
+		digitalWrite(BUZZER, HIGH);
+		Drive.stopDrive();
+		delay(500);
+		digitalWrite(BUZZER, LOW);
+		Drive.manualSteering(MANUAL_BACKWARD);
+		delay(500);
+		Drive.manualSteering(MANUAL_LEFT);
 		delay(500);
 		Drive.stopDrive();
 	}
