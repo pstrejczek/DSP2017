@@ -66,7 +66,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266mDNS;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266HTTPUpdateServer\src;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\ArduinoOTA;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries\EEPROM;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\libraries;$(ProjectDir)..\..\..\..\..\Documents\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266\libb64;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266\spiffs;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\cores\esp8266\umm_malloc;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\variants\nodemcu;$(ProjectDir)..\SandwichBoxBot;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\sdk\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\sdk\lwip\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\sdk\libc\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include\c++\4.8.2;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include\c++\4.8.2\xtensa-lx106-elf;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\lib\gcc\xtensa-lx106-elf\4.8.2\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\esp8266com\esp8266\tools\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.SandwichBoxBot.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>__ESP8266_ESp8266__;__ESP8266_ESP8266__;__ets__;ICACHE_FLASH;F_CPU=80000000L;LWIP_OPEN_SRC;ARDUINO=10801;ARDUINO_ESP8266_NODEMCU;ARDUINO_ARCH_ESP8266;ESP8266;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ESP8266_ESp8266__;__ESP8266_ESP8266__;__ets__;ICACHE_FLASH;F_CPU=80000000L;LWIP_OPEN_SRC;ARDUINO=10801;ARDUINO_ESP8266_NODEMCU;ARDUINO_ARCH_ESP8266;ESP8266;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -88,7 +88,6 @@
   <ItemGroup>
     <ClInclude Include="DriveHandler.h" />
     <ClInclude Include="EepromDataHandler.h" />
-    <ClInclude Include="MovementHandler.h" />
     <ClInclude Include="ProximitySensorHandler.h" />
     <ClInclude Include="UdpCommHandler.h" />
     <ClInclude Include="WebHandler.h" />
@@ -98,7 +97,6 @@
   <ItemGroup>
     <ClCompile Include="DriveHandler.cpp" />
     <ClCompile Include="EepromDataHandler.cpp" />
-    <ClCompile Include="MovementHandler.cpp" />
     <ClCompile Include="ProximitySensorHandler.cpp" />
     <ClCompile Include="UdpCommHandler.cpp" />
     <ClCompile Include="WebHandler.cpp" />

@@ -39,9 +39,6 @@
     <ClInclude Include="UdpCommHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MovementHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DriveHandler.cpp">
@@ -60,9 +57,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UdpCommHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MovementHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

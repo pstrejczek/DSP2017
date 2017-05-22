@@ -4,7 +4,6 @@
  Author:	Pawe³ Strejczek
 */
 
-#include "MovementHandler.h"
 #include "UdpCommHandler.h"
 #include "WiFiHandler.h"
 #include "WebHandler.h"
@@ -19,15 +18,12 @@
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
 
-MovementHandlerClass Movement;
-
 EepromDataHandlerClass EepromWebConfigHandler;
 WiFiHandlerClass WiFiHandler;
 WebHandlerClass WebHandler;
 UdpCommHandlerClass UdpCommHandler;
 
 ProximityState proximityState;
-CurrentMode currentMode;
 
 Command currentManualCommand = C_NONE;
 int test = 0;
@@ -36,14 +32,12 @@ void setup() {
 
 	Serial.begin(115200);
 	
-	Movement.init();
-	
 	EepromWebConfigHandler.init(); // you cannot start eeprom.begin in constructor it does not work
 	EepromWebConfigHandler.readEepromWiFiParameters();
 	WiFiHandler.init(EepromWebConfigHandler.getSsid(), EepromWebConfigHandler.getPassword());
 
 	// Initialize WebServer
-	WebHandler.init(EepromWebConfigHandler, WiFiHandler, Movement);
+	WebHandler.init(EepromWebConfigHandler, WiFiHandler);
 		
 	// Initialize UdpCommHandler
 	UdpCommHandler.init(1234);
@@ -72,18 +66,18 @@ void loop()
 	// Process Command
 	switch(currentManualCommand)
 	{
-		case C_AUTO: currentMode = MODE_AUTO; Movement.SetCurrentMode(MODE_AUTO); break;
-		case C_MANUAL: currentMode = MODE_MANUAL; Movement.SetCurrentMode(MODE_MANUAL); break;
-		case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
-		case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
-		case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
-		case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
-		case C_STOP: Drive.stopDrive(); break;
-		default: break;
+	case C_AUTO: Drive.stopDrive(); WebHandler.SetCurrentMode(MODE_AUTO); Serial.println("SET AUTO");  break;
+	case C_MANUAL: Drive.stopDrive(); WebHandler.SetCurrentMode(MODE_MANUAL); Serial.println("SET MANUAL"); break;
+	case C_FORWARD: Drive.manualSteering(MANUAL_FORWARD); break;
+	case C_BACKWARD: Drive.manualSteering(MANUAL_BACKWARD); break;
+	case C_LEFT: Drive.manualSteering(MANUAL_LEFT); break;
+	case C_RIGHT: Drive.manualSteering(MANUAL_RIGHT); break;
+	case C_STOP: Drive.stopDrive(); break;
+	default: break;
 	}
 	
 	// Robot logic
-	if(Movement.getCurrentMode() == MODE_AUTO) automaticRobotLogic();
+	if(WebHandler.getCurrentMode() == MODE_AUTO) automaticRobotLogic();
 }
 
 void automaticRobotLogic()

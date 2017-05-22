@@ -19,7 +19,12 @@
 #include<WiFiUdp.h>
 #include "EepromDataHandler.h"
 #include "WiFiHandler.h"
-#include "MovementHandler.h"
+
+enum CurrentMode
+{
+	MODE_MANUAL,
+	MODE_AUTO
+};
 
 class WebHandlerClass
 {
@@ -29,7 +34,7 @@ private:
 
 	EepromDataHandlerClass _eeprom;
 	WiFiHandlerClass _wifi;
-	MovementHandlerClass _movement;
+	CurrentMode _currentMovementMode;
 
 	void initializeWeb();
 	
@@ -42,7 +47,7 @@ private:
 	void webHandleGetCurrentNetwork();
 	void webHandleAvaiableNetworks();
 	void webHandleNotFound();
-	
+
 	String getAvaiableNetworks();
  protected:
 
@@ -50,7 +55,9 @@ private:
  public:
 	bool isInitialized;
 	bool processRequest();
-	void init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi, MovementHandlerClass movement);
+	CurrentMode getCurrentMode();
+	void SetCurrentMode(CurrentMode mode);
+	void init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi);
 };
 
 extern WebHandlerClass WebHandler;

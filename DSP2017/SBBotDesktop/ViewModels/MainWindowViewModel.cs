@@ -161,6 +161,7 @@ namespace SBBotDesktop.ViewModels
         private void ChangeRobotMode()
         {
             if (!_isConnected) return;
+            var lastMode = CurrentRobotMode;
 
             if (CurrentRobotMode == RobotMode.Automatic)
             {
@@ -174,7 +175,13 @@ namespace SBBotDesktop.ViewModels
             }
 
             var wo = new WebOperations(_robotIp);
-            CurrentRobotMode = wo.GetCurrentRobotMode();
+            var counter = 0;
+
+            while (lastMode == CurrentRobotMode && counter < 10)
+            {
+                CurrentRobotMode = wo.GetCurrentRobotMode();
+                counter++;
+            }
         }
 
         private async void ConnectRobot()

@@ -7,12 +7,13 @@
 ESP8266WebServer webServer(80);
 ESP8266HTTPUpdateServer updateServer;
 
-void WebHandlerClass::init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi, MovementHandlerClass movement)
+void WebHandlerClass::init(EepromDataHandlerClass eeprom, WiFiHandlerClass wifi)
 {
 	isInitialized = false;
+	
 	_eeprom = eeprom;
 	_wifi = wifi;
-	_movement = movement;
+	_currentMovementMode = MODE_MANUAL;
 
 	initializeWeb();
 }
@@ -164,7 +165,7 @@ void WebHandlerClass::webHandleCurrentRobotMode()
 {
 	String response;
 
-	if (_movement.getCurrentMode() == MODE_AUTO) response = "AUTOMATIC";
+	if (_currentMovementMode == MODE_AUTO) response = "AUTOMATIC";
 	else response = "MANUAL";
 	Serial.println("Sending 200 - current robot mode");
 	webServer.send(200, "text/plain", response);
@@ -234,6 +235,15 @@ String WebHandlerClass::getAvaiableNetworks()
 	return formatedNetworkList;
 }
 
+void WebHandlerClass::SetCurrentMode(CurrentMode mode)
+{
+	_currentMovementMode = mode;
+}
+
+CurrentMode WebHandlerClass::getCurrentMode()
+{
+	return _currentMovementMode;
+}
 
 
 
