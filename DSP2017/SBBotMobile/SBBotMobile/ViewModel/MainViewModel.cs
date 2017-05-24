@@ -26,6 +26,7 @@ namespace SBBotMobile.ViewModel
         public ICommand CBackward => new RelayCommand(ManualBackward);
         public ICommand CLeft => new RelayCommand(ManualLeft);
         public ICommand CRight => new RelayCommand(ManualRight);
+        public ICommand CStop => new RelayCommand(StopMovement);
 
         public bool IsConnected
         {

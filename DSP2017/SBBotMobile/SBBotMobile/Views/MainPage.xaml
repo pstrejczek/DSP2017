@@ -67,7 +67,8 @@
 					<RowDefinition Height="33*" />
 				</Grid.RowDefinitions>
 
-				<Button Grid.Column="1" Grid.Row="0" Text="FORWARD" Command="{Binding CForward}" ></Button>
+				<Button Grid.Column="1" Grid.Row="0" Text="FORWARD" Command="{Binding CForward}"></Button>
+				<Button Grid.Column="1" Grid.Row="1" Text="STOP" Command="{Binding CStop}"></Button>
 				<Button Grid.Column="0" Grid.Row="1" Text="LEFT" Command="{Binding CLeft}"></Button>
 				<Button Grid.Column="2" Grid.Row="1" Text="RIGHT" Command="{Binding CRight}"></Button>
 				<Button Grid.Column="1" Grid.Row="2" Text="BACKWARD" Command="{Binding CBackward}"></Button>
