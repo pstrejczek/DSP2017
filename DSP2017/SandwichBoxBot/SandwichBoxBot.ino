@@ -14,6 +14,7 @@
 #define BUZZER 14
 #define LOCAL_UDP_PORT 1234;
 
+#define INPUTFILTER 100;
 
 DriveHandlerClass Drive;
 ProximitySensorHandlerClass ProximitySensors;
@@ -26,7 +27,10 @@ UdpCommHandlerClass UdpCommHandler;
 ProximityState proximityState;
 
 Command currentManualCommand = C_NONE;
-int test = 0;
+int leftCounter = 0;
+int rightCounter = 0;
+
+int inputFilter = 100;
 
 void setup() {
 
@@ -84,31 +88,69 @@ void automaticRobotLogic()
 {
 	proximityState = ProximitySensors.checkState();
 
-	if (proximityState == BOTH || proximityState == LEFT)
+	if (proximityState == LEFT)
 	{
-		digitalWrite(BUZZER, HIGH);
-		Drive.stopDrive();
-		delay(500);
-		digitalWrite(BUZZER, LOW);
-		Drive.manualSteering(MANUAL_BACKWARD);
-		delay(500);
-		Drive.manualSteering(MANUAL_RIGHT);
-		delay(500);
-		Drive.stopDrive();
+		leftCounter++;
+		if(leftCounter > inputFilter)
+		{
+			digitalWrite(BUZZER, HIGH);
+			Drive.stopDrive();
+			delay(500);
+			digitalWrite(BUZZER, LOW);
+			Drive.manualSteering(MANUAL_BACKWARD);
+			delay(500);
+			Drive.manualSteering(MANUAL_RIGHT);
+			delay(500);
+			Drive.stopDrive();
+			leftCounter = 0;
+		}
 	}
-	else if (proximityState == RIGHT)
+	else leftCounter = 0;
+
+	if (proximityState == RIGHT)
 	{
-		digitalWrite(BUZZER, HIGH);
-		Drive.stopDrive();
-		delay(500);
-		digitalWrite(BUZZER, LOW);
-		Drive.manualSteering(MANUAL_BACKWARD);
-		delay(500);
-		Drive.manualSteering(MANUAL_LEFT);
-		delay(500);
-		Drive.stopDrive();
+		rightCounter++;
+		if (rightCounter > inputFilter)
+		{
+			digitalWrite(BUZZER, HIGH);
+			Drive.stopDrive();
+			delay(500);
+			digitalWrite(BUZZER, LOW);
+			Drive.manualSteering(MANUAL_BACKWARD);
+			delay(500);
+			Drive.manualSteering(MANUAL_LEFT);
+			delay(500);
+			Drive.stopDrive();
+			rightCounter = 0;
+		}
 	}
-	else
+	else rightCounter = 0;
+
+	if (proximityState == BOTH)
+	{
+		leftCounter++;
+		rightCounter++;
+		if (leftCounter > inputFilter && rightCounter > inputFilter)
+		{
+			digitalWrite(BUZZER, HIGH);
+			Drive.stopDrive();
+			delay(500);
+			digitalWrite(BUZZER, LOW);
+			Drive.manualSteering(MANUAL_BACKWARD);
+			delay(500);
+			Drive.manualSteering(MANUAL_RIGHT);
+			delay(500);
+			Drive.stopDrive();
+			leftCounter = 0;
+			rightCounter = 0;
+		}
+	}
+
+	if (leftCounter == 32766) leftCounter = 0;
+	if (leftCounter == 32767) rightCounter = 0;
+
+	
+	if(leftCounter < inputFilter && rightCounter < inputFilter)
 	{
 		digitalWrite(BUZZER, LOW);
 		Drive.manualSteering(MANUAL_FORWARD);
